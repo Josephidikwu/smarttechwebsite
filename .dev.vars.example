@@ -1,0 +1,6 @@
+# Local dev secrets (wrangler convention — NOT read by `next dev` directly,
+# but proxied in via initOpenNextCloudflareForDev() in next.config.ts).
+# Copy to `.dev.vars` (gitignored). Production equivalent:
+#   npx wrangler secret put TURNSTILE_SECRET_KEY
+
+TURNSTILE_SECRET_KEY=

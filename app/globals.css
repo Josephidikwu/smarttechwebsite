@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+/*
+ * Brand tokens — source: docs/brand-guide-page-*.png (Smart Technology brand
+ * guide). Primary blue #042CCC and black are the guide's stated colours;
+ * neutrals/tints below are derived, not specified in the guide, to build a
+ * light-first UI around them. Typeface: the guide shows weight variants
+ * (Light/Medium/SemiBold/Bold) but never names the family — Plus Jakarta
+ * Sans is a close free stand-in wired through --font-sans below; swap the
+ * `next/font/google` import in app/layout.tsx if the real family is
+ * confirmed later, nothing else needs to change.
+ */
+:root {
+  /* brand */
+  --color-brand-blue: #042ccc;
+  --color-brand-blue-dark: #021f94;
+  --color-brand-blue-tint: #eef1fd;
+  --color-brand-black: #000000;
+
+  /* light-first foundation (see docs/design-direction.md — no auto dark mode) */
+  --color-bg: #ffffff;
+  --color-bg-subtle: #f7f7fb;
+  --color-ink: #0a0a10;
+  --color-ink-muted: #55555f;
+  --color-border: #e6e6ee;
+
+  /* dark sections are an intentional, hand-placed design choice, not a
+     system-preference toggle — see .section-dark utility below */
+  --color-dark-bg: #05060f;
+  --color-dark-ink: #f5f6fb;
+  --color-dark-ink-muted: #9797ab;
+  --color-dark-border: #1c1d2e;
+}
+
+@theme inline {
+  --color-brand-blue: var(--color-brand-blue);
+  --color-brand-blue-dark: var(--color-brand-blue-dark);
+  --color-brand-blue-tint: var(--color-brand-blue-tint);
+  --color-brand-black: var(--color-brand-black);
+  --color-bg: var(--color-bg);
+  --color-bg-subtle: var(--color-bg-subtle);
+  --color-ink: var(--color-ink);
+  --color-ink-muted: var(--color-ink-muted);
+  --color-border: var(--color-border);
+  --color-dark-bg: var(--color-dark-bg);
+  --color-dark-ink: var(--color-dark-ink);
+  --color-dark-ink-muted: var(--color-dark-ink-muted);
+  --color-dark-border: var(--color-dark-border);
+  --font-sans: var(--font-plus-jakarta);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Explicit dark-section utility — applied deliberately per the design
+   direction (AI/infrastructure/technology moments), never automatically. */
+.section-dark {
+  background: var(--color-dark-bg);
+  color: var(--color-dark-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

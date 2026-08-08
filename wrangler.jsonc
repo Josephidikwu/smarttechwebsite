@@ -1,0 +1,50 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "smarttechwebsite",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-08-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+
+  // --- Database ---
+  // Created via: npx wrangler d1 create smarttechwebsite-db
+  // Replace database_id below with the value that command prints, then run
+  // migrations with: npx wrangler d1 execute smarttechwebsite-db --local --file=./drizzle/<migration>.sql
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "smarttechwebsite-db",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "migrations_dir": "drizzle"
+    }
+  ],
+
+  // --- File storage (CVs, portfolios, product/blog images) ---
+  // Created via: npx wrangler r2 bucket create smarttechwebsite-uploads
+  "r2_buckets": [
+    {
+      "binding": "UPLOADS",
+      "bucket_name": "smarttechwebsite-uploads"
+    }
+  ],
+
+  // --- Transactional email ---
+  // Enabled via: npx wrangler email sending enable <your-domain>
+  "send_email": [{ "name": "EMAIL" }],
+
+  // --- Non-secret runtime config ---
+  // Secrets (Turnstile secret key, session signing key, etc.) go through
+  // `npx wrangler secret put <NAME>` / `.dev.vars` locally — never here.
+  "vars": {
+    "NEXT_PUBLIC_SITE_URL": "http://localhost:3000",
+    "NEXT_PUBLIC_GA_MEASUREMENT_ID": "",
+    "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "",
+    // Where admin notification emails (new enquiry/application) are sent.
+    "ADMIN_NOTIFICATION_EMAIL": "",
+    // Must be on a domain onboarded via `wrangler email sending enable` (see docs/SETUP.md).
+    "EMAIL_FROM_ADDRESS": "no-reply@example.com"
+  }
+}
