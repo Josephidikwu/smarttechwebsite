@@ -117,6 +117,26 @@ export async function notifyAdminOfTrainingApplication(a: {
   });
 }
 
+export async function notifyAdminOfInternshipApplication(a: {
+  fullName: string;
+  email: string;
+  phone?: string | null;
+  positionName: string;
+}) {
+  const { html, text } = layout("New internship application", [
+    ["Name", a.fullName],
+    ["Email", a.email],
+    ["Phone", a.phone],
+    ["Position", a.positionName],
+  ]);
+  await sendMail({
+    to: adminEmail(),
+    subject: `New internship application: ${a.positionName}`,
+    html,
+    text,
+  });
+}
+
 export async function notifyAdminOfQuoteRequest(q: {
   name: string;
   email: string;

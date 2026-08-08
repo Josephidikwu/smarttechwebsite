@@ -84,3 +84,35 @@ export const trainingApplicationSchema = z.object({
   preferredFormat: z.string().trim().max(100).optional().or(z.literal("")),
   additionalInfo: z.string().trim().max(2000).optional().or(z.literal("")),
 });
+
+// -------------------------------------------------------------- Internship
+
+export const internshipSchema = z.object({
+  position: z.string().trim().min(2, "Enter a position name").max(200),
+  department: z.string().trim().max(100).optional().or(z.literal("")),
+  description: z.string().trim().max(5000).optional().or(z.literal("")),
+  responsibilities: z.string().trim().max(3000).optional().or(z.literal("")),
+  requirements: z.string().trim().max(3000).optional().or(z.literal("")),
+  duration: z.string().trim().max(100).optional().or(z.literal("")),
+  location: z.string().trim().max(200).optional().or(z.literal("")),
+  workArrangement: z.string().trim().max(100).optional().or(z.literal("")),
+  applicationDeadline: z.string().optional().or(z.literal("")),
+  positionsAvailable: z.string().optional().or(z.literal("")),
+  status: z.enum(programmeStatusOptions, { error: "Choose a status" }),
+});
+
+export const internshipApplicationSchema = z.object({
+  fullName: z.string().trim().min(2, "Enter your full name").max(200),
+  email: z.email("Enter a valid email address").max(320),
+  phone: z.string().trim().max(40).optional().or(z.literal("")),
+  institution: z.string().trim().max(200).optional().or(z.literal("")),
+  courseOfStudy: z.string().trim().max(200).optional().or(z.literal("")),
+  graduationYear: z.string().optional().or(z.literal("")),
+  areaOfInterest: z.string().trim().max(200).optional().or(z.literal("")),
+  skills: z.string().trim().max(1000).optional().or(z.literal("")),
+  portfolio: z.string().trim().max(500).optional().or(z.literal("")),
+  github: z.string().trim().max(500).optional().or(z.literal("")),
+  linkedin: z.string().trim().max(500).optional().or(z.literal("")),
+  coverLetter: z.string().trim().max(3000).optional().or(z.literal("")),
+  availability: z.string().trim().max(300).optional().or(z.literal("")),
+});
