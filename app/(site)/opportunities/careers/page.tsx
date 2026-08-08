@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { desc, eq } from "drizzle-orm";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import { getDb } from "@/lib/db/client";
+import { jobs } from "@/lib/db/schema";
 
 export const metadata: Metadata = {
   title: "Careers at Smart Technology",
@@ -8,7 +12,13 @@ export const metadata: Metadata = {
     "Explore careers at Smart Technology — technology jobs and opportunities for people who are curious, capable and ready to solve problems.",
 };
 
-export default function CareersPage() {
+// Reads live job listings (admin-managed) — never statically cached.
+export const dynamic = "force-dynamic";
+
+export default async function CareersPage() {
+  const db = getDb();
+  const openJobs = await db.select().from(jobs).where(eq(jobs.status, "open")).orderBy(desc(jobs.createdAt));
+
   return (
     <>
       <section className="pt-16 pb-4 lg:pt-24">
@@ -27,8 +37,42 @@ export default function CareersPage() {
         </Container>
       </section>
 
-      {/* Open Positions — populated once job postings ship in M6; no listings to
-          show yet, so this section leads with the general-application path. */}
+      <section className="py-16 lg:py-20">
+        <Container>
+          <h2 className="text-2xl font-bold tracking-tight text-[var(--color-ink)]">
+            Open Positions
+          </h2>
+
+          {openJobs.length > 0 ? (
+            <div className="mt-8 divide-y divide-[var(--color-border)] border-t border-[var(--color-border)]">
+              {openJobs.map((j) => (
+                <Link
+                  key={j.id}
+                  href={`/opportunities/careers/${j.slug}`}
+                  className="group flex flex-col gap-2 py-7 sm:flex-row sm:items-center sm:gap-8"
+                >
+                  <span className="text-lg font-semibold text-[var(--color-ink)] sm:w-72 sm:shrink-0">
+                    {j.title}
+                  </span>
+                  <span className="text-sm text-[var(--color-ink-muted)] sm:flex-1">
+                    {j.department} {j.location ? `· ${j.location}` : ""}{" "}
+                    {j.employmentType ? `· ${j.employmentType}` : ""}
+                  </span>
+                  <span className="text-sm font-medium text-[var(--color-brand-blue)] whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
+                    View Position →
+                  </span>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-6 text-sm text-[var(--color-ink-muted)]">
+              No open positions right now — check back soon, or submit a general application
+              below.
+            </p>
+          )}
+        </Container>
+      </section>
+
       <section className="border-t border-[var(--color-border)] py-20 lg:py-24">
         <Container className="flex flex-col items-start justify-between gap-6 rounded-lg bg-[var(--color-bg-subtle)] p-10 sm:flex-row sm:items-center">
           <div>
@@ -40,7 +84,7 @@ export default function CareersPage() {
               evolving, and so are we — tell us how you could contribute.
             </p>
           </div>
-          <Button href="/contact">Submit General Application</Button>
+          <Button href="/opportunities/careers/general">Submit General Application</Button>
         </Container>
       </section>
     </>

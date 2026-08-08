@@ -18,8 +18,13 @@ export async function GET(_request: Request, { params }: { params: Promise<{ key
     return new Response("Not found", { status: 404 });
   }
 
+  // Read metadata as plain data rather than object.writeHttpMetadata(headers) —
+  // over the dev-mode Workers RPC bridge, passing a live Headers instance as
+  // an RPC argument fails ("non-POJO"). Plain property reads are fine.
   const headers = new Headers();
-  object.writeHttpMetadata(headers);
+  if (object.httpMetadata?.contentType) {
+    headers.set("Content-Type", object.httpMetadata.contentType);
+  }
   headers.set("Content-Disposition", `attachment; filename="${key.split("/").pop()}"`);
   headers.set("Cache-Control", "private, no-store");
 

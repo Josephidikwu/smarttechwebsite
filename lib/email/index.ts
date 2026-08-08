@@ -137,6 +137,34 @@ export async function notifyAdminOfInternshipApplication(a: {
   });
 }
 
+export async function notifyAdminOfJobApplication(a: {
+  fullName: string;
+  email: string;
+  phone?: string | null;
+  jobTitle: string;
+}) {
+  const { html, text } = layout("New job application", [
+    ["Name", a.fullName],
+    ["Email", a.email],
+    ["Phone", a.phone],
+    ["Job", a.jobTitle],
+  ]);
+  await sendMail({ to: adminEmail(), subject: `New job application: ${a.jobTitle}`, html, text });
+}
+
+export async function notifyAdminOfGeneralApplication(a: {
+  fullName: string;
+  email: string;
+  phone?: string | null;
+}) {
+  const { html, text } = layout("New general career application", [
+    ["Name", a.fullName],
+    ["Email", a.email],
+    ["Phone", a.phone],
+  ]);
+  await sendMail({ to: adminEmail(), subject: "New general career application", html, text });
+}
+
 export async function notifyAdminOfQuoteRequest(q: {
   name: string;
   email: string;
