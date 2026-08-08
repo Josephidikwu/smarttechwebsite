@@ -62,6 +62,19 @@ Create a Turnstile widget for the domain, then set:
 Once deployed to the real domain: verify via DNS or meta tag, submit `sitemap.xml`, request
 indexing for key pages. This is an M9/M10-time step, not needed now.
 
+## Admin access
+
+There's no public signup — the first account has to be seeded directly:
+
+```sh
+ADMIN_NAME="Your Name" ADMIN_EMAIL=you@example.com ADMIN_PASSWORD="a-strong-password" \
+  npm run seed:admin
+```
+
+This prints a `wrangler d1 execute` command (against local D1 by default, `--remote` for
+production) rather than running it for you — review it, then run it. From there, sign in at
+`/admin/login` and add colleagues from Settings → Users (super_admin only).
+
 ## Local development (works today, no account needed)
 
 ```sh

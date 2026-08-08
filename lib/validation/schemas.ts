@@ -40,3 +40,17 @@ export const quoteRequestSchema = z.object({
 export const newsletterSchema = z.object({
   email: z.email("Enter a valid email address").max(320),
 });
+
+export const loginSchema = z.object({
+  email: z.email("Enter a valid email address").max(320),
+  password: z.string().min(1, "Enter your password").max(200),
+});
+
+export const userRoleOptions = ["super_admin", "admin", "editor"] as const;
+
+export const createUserSchema = z.object({
+  name: z.string().trim().min(2, "Enter a full name").max(200),
+  email: z.email("Enter a valid email address").max(320),
+  password: z.string().min(12, "Use at least 12 characters").max(200),
+  role: z.enum(userRoleOptions, { error: "Choose a role" }),
+});
