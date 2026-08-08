@@ -44,7 +44,7 @@ export const adminNav: AdminNavGroup[] = [
   {
     heading: "Communication",
     items: [
-      { label: "Contact Enquiries", href: "/admin/contact", available: false }, // M3
+      { label: "Contact Enquiries", href: "/admin/contact", available: true },
       { label: "Notifications", href: "/admin/notifications", available: false },
     ],
   },
