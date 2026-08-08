@@ -33,8 +33,8 @@ export const adminNav: AdminNavGroup[] = [
   {
     heading: "Opportunities",
     items: [
-      { label: "Training", href: "/admin/training", available: false }, // M4
-      { label: "Training Applications", href: "/admin/training/applications", available: false }, // M4
+      { label: "Training", href: "/admin/training", available: true },
+      { label: "Training Applications", href: "/admin/training/applications", available: true },
       { label: "Internships", href: "/admin/internships", available: false }, // M5
       { label: "Internship Applications", href: "/admin/internships/applications", available: false }, // M5
       { label: "Careers / Jobs", href: "/admin/careers", available: false }, // M6

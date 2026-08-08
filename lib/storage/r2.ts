@@ -44,14 +44,7 @@ export async function uploadToR2(
   return { key };
 }
 
-/** Short-lived signed access for admin routes — objects are never public. */
-export async function getSignedDownloadUrl(key: string, expiresInSeconds = 300) {
-  const { env } = getCloudflareContext();
-  const object = await env.UPLOADS.get(key);
-  if (!object) return null;
-  // R2 bindings don't presign directly; admin download routes stream the
-  // object through an authenticated Route Handler instead (built in M2/M3
-  // alongside the admin auth that gates it) rather than a public signed URL.
-  void expiresInSeconds;
-  return object;
+/** The admin-facing link for a stored object — see app/api/admin/files/[...key]/route.ts. */
+export function adminFileUrl(key: string) {
+  return `/api/admin/files/${key.split("/").map(encodeURIComponent).join("/")}`;
 }

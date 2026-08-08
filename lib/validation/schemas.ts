@@ -54,3 +54,33 @@ export const createUserSchema = z.object({
   password: z.string().min(12, "Use at least 12 characters").max(200),
   role: z.enum(userRoleOptions, { error: "Choose a role" }),
 });
+
+// ---------------------------------------------------------------- Training
+
+export const programmeStatusOptions = ["draft", "open", "closed"] as const;
+
+export const trainingProgrammeSchema = z.object({
+  name: z.string().trim().min(2, "Enter a programme name").max(200),
+  description: z.string().trim().max(5000).optional().or(z.literal("")),
+  category: z.string().trim().max(100).optional().or(z.literal("")),
+  startDate: z.string().optional().or(z.literal("")),
+  endDate: z.string().optional().or(z.literal("")),
+  duration: z.string().trim().max(100).optional().or(z.literal("")),
+  format: z.string().trim().max(100).optional().or(z.literal("")),
+  location: z.string().trim().max(200).optional().or(z.literal("")),
+  applicationDeadline: z.string().optional().or(z.literal("")),
+  capacity: z.string().optional().or(z.literal("")),
+  status: z.enum(programmeStatusOptions, { error: "Choose a status" }),
+  requirements: z.string().trim().max(3000).optional().or(z.literal("")),
+});
+
+export const trainingApplicationSchema = z.object({
+  fullName: z.string().trim().min(2, "Enter your full name").max(200),
+  email: z.email("Enter a valid email address").max(320),
+  phone: z.string().trim().max(40).optional().or(z.literal("")),
+  currentSkillLevel: z.string().trim().max(100).optional().or(z.literal("")),
+  educationalBackground: z.string().trim().max(1000).optional().or(z.literal("")),
+  motivation: z.string().trim().min(10, "Tell us a bit more (at least 10 characters)").max(3000),
+  preferredFormat: z.string().trim().max(100).optional().or(z.literal("")),
+  additionalInfo: z.string().trim().max(2000).optional().or(z.literal("")),
+});

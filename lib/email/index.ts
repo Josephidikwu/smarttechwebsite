@@ -77,6 +77,46 @@ export async function notifyAdminOfContactSubmission(s: {
   await sendMail({ to: adminEmail(), subject: `New enquiry: ${s.subject}`, html, text });
 }
 
+/** "We've received your application" — docs/content-deck.md §25, reused across
+ *  training/internship/careers/general applications. */
+export async function sendApplicantConfirmation(opts: {
+  to: string;
+  applicantName: string;
+  applicationType: "training" | "internship" | "job" | "general";
+  itemName: string;
+}) {
+  const { html, text } = layout("Application Received", [
+    ["Application type", opts.applicationType],
+    ["Programme / role", opts.itemName],
+    ["Submitted", new Date().toLocaleString()],
+  ]);
+  const withIntro = {
+    html: `<p>Hi ${opts.applicantName},</p><p>Thank you for your interest in Smart Technology. We've successfully received your application. Our team will review your submission and contact you if you are selected for the next stage.</p>${html}`,
+    text: `Hi ${opts.applicantName},\n\nThank you for your interest in Smart Technology. We've successfully received your application. Our team will review your submission and contact you if you are selected for the next stage.\n\n${text}`,
+  };
+  await sendMail({ to: opts.to, subject: "Application Received — Smart Technology", ...withIntro });
+}
+
+export async function notifyAdminOfTrainingApplication(a: {
+  fullName: string;
+  email: string;
+  phone?: string | null;
+  programmeName: string;
+}) {
+  const { html, text } = layout("New training application", [
+    ["Name", a.fullName],
+    ["Email", a.email],
+    ["Phone", a.phone],
+    ["Programme", a.programmeName],
+  ]);
+  await sendMail({
+    to: adminEmail(),
+    subject: `New training application: ${a.programmeName}`,
+    html,
+    text,
+  });
+}
+
 export async function notifyAdminOfQuoteRequest(q: {
   name: string;
   email: string;
