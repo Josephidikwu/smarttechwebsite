@@ -64,6 +64,27 @@ Create a Turnstile widget for the domain, then set:
 Once deployed to the real domain: verify via DNS or meta tag, submit `sitemap.xml`, request
 indexing for key pages. This is an M9/M10-time step, not needed now.
 
+## 8. Rate limiting (zone-level, do this once the domain is on Cloudflare)
+
+Public submission endpoints (contact, quote, product enquiry, training/internship/career
+applications, newsletter) are protected by Turnstile against bot spam, but not against a human
+hammering them. Rather than build an app-level limiter against D1 (adds latency and write load to
+every request for a concern Cloudflare already solves at the edge), throttle these at the zone
+level once the domain is proxied through Cloudflare (step 4 above):
+
+Dashboard → your zone → **Security → WAF → Rate limiting rules** → create a rule per submission
+route, e.g.:
+
+- Match: `(http.request.uri.path matches "^/(contact|quote|products/.*/enquire|opportunities/.*/apply)")`
+  and `http.request.method eq "POST"`
+- Rate: 5 requests / 1 minute per IP (adjust after watching real traffic)
+- Action: **Block** (or **Managed Challenge** if you'd rather challenge than hard-block)
+
+Same idea for `/admin/login` — a tighter rule (e.g. 5 requests/5 minutes per IP) blunts credential
+stuffing against the one auth endpoint that isn't behind Turnstile today. This can also be
+expressed as `wrangler.jsonc`-adjacent Terraform/API config later if you want it version
+controlled, but the dashboard is the fastest path for launch.
+
 ## Admin access
 
 There's no public signup — the first account has to be seeded directly:
