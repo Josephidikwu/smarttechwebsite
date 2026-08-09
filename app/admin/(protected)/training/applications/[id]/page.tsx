@@ -6,7 +6,7 @@ import { getDb } from "@/lib/db/client";
 import { trainingApplications, trainingProgrammes, statusHistory, users } from "@/lib/db/schema";
 import { StatusBadge, type Tone } from "@/components/ui/status-badge";
 import { TrainingApplicationActions } from "@/components/sections/admin/training-application-actions";
-import { adminFileUrl } from "@/lib/storage/r2";
+import { adminFileUrl } from "@/lib/storage/blob";
 
 export const metadata: Metadata = { title: "Application Detail", robots: { index: false } };
 

@@ -7,7 +7,7 @@ import { getDb } from "@/lib/db/client";
 import { internshipApplications, internships } from "@/lib/db/schema";
 import { internshipApplicationSchema } from "@/lib/validation/schemas";
 import { verifyTurnstile } from "@/lib/turnstile";
-import { uploadToR2 } from "@/lib/storage/r2";
+import { uploadToBlob } from "@/lib/storage/blob";
 import { notifyAdminOfInternshipApplication, sendApplicantConfirmation } from "@/lib/email";
 
 export type InternshipApplicationState = {
@@ -63,7 +63,7 @@ export async function submitInternshipApplication(
   let cvKey: string | null = null;
   const cv = formData.get("cv");
   if (cv instanceof File && cv.size > 0) {
-    const result = await uploadToR2(cv, { prefix: "internship-cvs", kind: "document" });
+    const result = await uploadToBlob(cv, { prefix: "internship-cvs", kind: "document" });
     if ("error" in result) return { formError: result.error, values: raw };
     cvKey = result.key;
   }

@@ -1,15 +1,21 @@
-// Augments the generated `cloudflare-env.d.ts` (run `npm run cf-typegen` to
-// regenerate that file from wrangler.jsonc bindings/vars). Secrets never go
-// in wrangler.jsonc, so they aren't picked up by that generator — declared
-// here instead. Local dev: put them in `.dev.vars` (see `.dev.vars.example`).
-// Production: `npx wrangler secret put <NAME>`.
-declare namespace Cloudflare {
-  interface Env {
+// Typed `process.env` access for the server-only env vars this app reads.
+// Public (`NEXT_PUBLIC_*`) vars are typed the same way but also bundled
+// client-side by Next.js — see docs/SETUP.md for where each one comes from.
+declare namespace NodeJS {
+  interface ProcessEnv {
+    /** Neon connection string. */
+    DATABASE_URL: string;
+    /** Vercel Blob read-write token (auto-set when a store is connected to the project). */
+    BLOB_READ_WRITE_TOKEN?: string;
+    /** 32-byte base64 key for encrypting the SMTP password at rest — `openssl rand -base64 32`. */
+    SETTINGS_ENCRYPTION_KEY: string;
     /** Turnstile secret key — server-side siteverify only, never exposed to the client. */
     TURNSTILE_SECRET_KEY?: string;
-  }
-}
+    /** Inbox that receives "new submission" notifications for every pipeline. */
+    ADMIN_NOTIFICATION_EMAIL?: string;
 
-interface CloudflareEnv {
-  TURNSTILE_SECRET_KEY?: string;
+    NEXT_PUBLIC_SITE_URL: string;
+    NEXT_PUBLIC_GA_MEASUREMENT_ID?: string;
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY?: string;
+  }
 }

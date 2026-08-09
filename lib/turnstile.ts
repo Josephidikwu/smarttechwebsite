@@ -1,5 +1,3 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
-
 /**
  * Server-side Turnstile siteverify — canonical pattern from the
  * turnstile-spin skill. Fails closed: any network error, non-2xx, or
@@ -11,8 +9,7 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
  * this on before launch.
  */
 export async function verifyTurnstile(token: string | null, remoteIp?: string): Promise<boolean> {
-  const { env } = getCloudflareContext();
-  const secret = env.TURNSTILE_SECRET_KEY;
+  const secret = process.env.TURNSTILE_SECRET_KEY;
 
   if (!secret) {
     console.warn(

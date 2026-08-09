@@ -7,7 +7,7 @@ import { getDb } from "@/lib/db/client";
 import { trainingApplications, trainingProgrammes } from "@/lib/db/schema";
 import { trainingApplicationSchema } from "@/lib/validation/schemas";
 import { verifyTurnstile } from "@/lib/turnstile";
-import { uploadToR2 } from "@/lib/storage/r2";
+import { uploadToBlob } from "@/lib/storage/blob";
 import { notifyAdminOfTrainingApplication, sendApplicantConfirmation } from "@/lib/email";
 
 export type TrainingApplicationState = {
@@ -58,7 +58,7 @@ export async function submitTrainingApplication(
   let cvKey: string | null = null;
   const cv = formData.get("cv");
   if (cv instanceof File && cv.size > 0) {
-    const result = await uploadToR2(cv, { prefix: "training-cvs", kind: "document" });
+    const result = await uploadToBlob(cv, { prefix: "training-cvs", kind: "document" });
     if ("error" in result) return { formError: result.error, values: raw };
     cvKey = result.key;
   }

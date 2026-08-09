@@ -7,7 +7,7 @@ import { getDb } from "@/lib/db/client";
 import { jobApplications, jobs, generalApplications } from "@/lib/db/schema";
 import { jobApplicationSchema, generalApplicationSchema } from "@/lib/validation/schemas";
 import { verifyTurnstile } from "@/lib/turnstile";
-import { uploadToR2 } from "@/lib/storage/r2";
+import { uploadToBlob } from "@/lib/storage/blob";
 import {
   notifyAdminOfJobApplication,
   notifyAdminOfGeneralApplication,
@@ -23,7 +23,7 @@ export type JobApplicationState = {
 async function uploadIfPresent(formData: FormData, field: string, prefix: string) {
   const file = formData.get(field);
   if (file instanceof File && file.size > 0) {
-    const result = await uploadToR2(file, { prefix, kind: "document" });
+    const result = await uploadToBlob(file, { prefix, kind: "document" });
     if ("error" in result) return { error: result.error };
     return { key: result.key };
   }

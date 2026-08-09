@@ -90,7 +90,7 @@ export function SiteFooter() {
           <p>© {new Date().getFullYear()} {site.legalName}. All rights reserved.</p>
           {legalColumn && (
             <div className="flex flex-wrap gap-x-4 gap-y-2">
-              {legalColumn.links.map((link, idx) => (
+              {legalColumn.links.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}

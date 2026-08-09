@@ -1,25 +1,24 @@
-import { sql } from "drizzle-orm";
-import { integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, pgTable, primaryKey, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { users } from "./core";
 
 export type BlogPostStatus = "draft" | "scheduled" | "published";
 
 // Technology, AI, Software, Gadgets, Business Technology, Digital Transformation,
 // Career & Skills, Training
-export const blogCategories = sqliteTable("blog_categories", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const blogCategories = pgTable("blog_categories", {
+  id: serial("id").primaryKey(),
   name: text("name").notNull(),
   slug: text("slug").notNull().unique(),
 });
 
-export const blogTags = sqliteTable("blog_tags", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const blogTags = pgTable("blog_tags", {
+  id: serial("id").primaryKey(),
   name: text("name").notNull(),
   slug: text("slug").notNull().unique(),
 });
 
-export const blogPosts = sqliteTable("blog_posts", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const blogPosts = pgTable("blog_posts", {
+  id: serial("id").primaryKey(),
   title: text("title").notNull(),
   slug: text("slug").notNull().unique(),
   excerpt: text("excerpt"),
@@ -30,18 +29,14 @@ export const blogPosts = sqliteTable("blog_posts", {
   }),
   authorId: integer("author_id").references(() => users.id, { onDelete: "set null" }),
   status: text("status").$type<BlogPostStatus>().notNull().default("draft"),
-  publishedAt: integer("published_at", { mode: "timestamp" }),
+  publishedAt: timestamp("published_at"),
   seoTitle: text("seo_title"),
   seoDescription: text("seo_description"),
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .notNull()
-    .default(sql`(unixepoch())`),
-  updatedAt: integer("updated_at", { mode: "timestamp" })
-    .notNull()
-    .default(sql`(unixepoch())`),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const blogPostTags = sqliteTable(
+export const blogPostTags = pgTable(
   "blog_post_tags",
   {
     postId: integer("post_id")

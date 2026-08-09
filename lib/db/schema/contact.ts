@@ -1,11 +1,10 @@
-import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export type ContactStatus = "new" | "in_progress" | "resolved";
 
 /** The Contact page form ("Let's Talk Technology"). */
-export const contactSubmissions = sqliteTable("contact_submissions", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const contactSubmissions = pgTable("contact_submissions", {
+  id: serial("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull(),
   phone: text("phone"),
@@ -16,11 +15,7 @@ export const contactSubmissions = sqliteTable("contact_submissions", {
   subject: text("subject").notNull(),
   message: text("message").notNull(),
   status: text("status").$type<ContactStatus>().notNull().default("new"),
-  archivedAt: integer("archived_at", { mode: "timestamp" }),
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .notNull()
-    .default(sql`(unixepoch())`),
-  updatedAt: integer("updated_at", { mode: "timestamp" })
-    .notNull()
-    .default(sql`(unixepoch())`),
+  archivedAt: timestamp("archived_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

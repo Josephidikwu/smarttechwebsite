@@ -1,10 +1,10 @@
 # Smart Technology Information Hub — Website
 
-Next.js (App Router) + Cloudflare Workers (via OpenNext) + D1 + R2. See `docs/` for the full
-picture:
+Next.js (App Router) + Vercel + Neon Postgres + Vercel Blob. See `docs/` for the full picture:
 
-- `docs/SETUP.md` — one-time setup that needs your Cloudflare/Google accounts (D1, R2, domain,
-  GA4, Turnstile, Search Console).
+- `docs/SETUP.md` — one-time setup that needs your Neon/Vercel/Google accounts (database, Blob
+  store, domain, GA4, Turnstile, Search Console). Webmail (SMTP) is configured from the admin
+  dashboard after first login, not here.
 - `docs/content-deck.md` — the literal source copy for every page.
 - `docs/design-direction.md` — the art-direction brief this build is checked against.
 - `docs/brand-guide-page-*.png` — reference renders from the Smart Technology brand guide.
@@ -16,22 +16,20 @@ milestones are tracked as tasks (M0–M10).
 
 ```sh
 npm install
-npm run db:migrate:local   # apply Drizzle migrations to local D1 (no Cloudflare login needed)
-npm run dev                # next dev, http://localhost:3000
+cp .env.example .env.local   # fill in DATABASE_URL at minimum — see docs/SETUP.md
+npm run db:migrate           # apply Drizzle migrations to your Neon branch
+npm run dev                  # next dev, http://localhost:3000
 ```
 
 Other scripts:
 
 ```sh
-npm run build              # production Next.js build
-npm run lint                # ESLint
-npm run preview             # opennextjs-cloudflare build + preview (workerd runtime, closest to prod)
-npm run deploy               # build + deploy to Cloudflare Workers
-npm run db:generate         # generate a new Drizzle migration after editing lib/db/schema/*
-npm run db:migrate:local    # apply pending migrations to local D1
-npm run db:migrate:remote   # apply pending migrations to the real D1 database (needs wrangler login)
-npm run db:studio           # browse local D1 data
-npm run cf-typegen          # regenerate cloudflare-env.d.ts after changing wrangler.jsonc bindings
+npm run build       # production Next.js build
+npm run lint         # ESLint
+npm run db:generate  # generate a new Drizzle migration after editing lib/db/schema/*
+npm run db:migrate   # apply pending migrations to DATABASE_URL
+npm run db:studio    # browse DATABASE_URL's data
+npm run seed:admin   # create the first super_admin (no public signup)
 ```
 
 ## Project structure
@@ -41,7 +39,8 @@ app/                marketing, catalogue, opportunities, admin routes (App Route
 components/ui/       brand-token-driven primitives (Button, Container, Logo)
 components/sections/ bespoke, composition-first per-page-section layouts
 lib/db/schema/       Drizzle schema, one file per domain module
-lib/db/client.ts     getDb() — D1 binding via getCloudflareContext()
+lib/db/client.ts     getDb() — Neon connection via DATABASE_URL
+lib/crypto/          AES-256-GCM helpers for the admin-configured SMTP password at rest
 lib/brand.ts         site identity, nav, footer structure (single source of truth)
 public/brand/        logo assets extracted from the brand guide (SVG + favicon PNGs)
 drizzle/             generated SQL migrations

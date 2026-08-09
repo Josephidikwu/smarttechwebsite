@@ -216,3 +216,16 @@ export const generalApplicationSchema = z.object({
   linkedin: z.string().trim().max(500).optional().or(z.literal("")),
   message: z.string().trim().min(10, "Tell us a bit more (at least 10 characters)").max(3000),
 });
+
+// ------------------------------------------------------------- Email/Webmail
+
+/** Password is optional on save — leave blank to keep the currently stored one. */
+export const emailSettingsSchema = z.object({
+  smtpHost: z.string().trim().min(1, "Enter your mail server host").max(255),
+  smtpPort: z.coerce.number().int().min(1).max(65535),
+  smtpSecure: z.coerce.boolean(),
+  smtpUsername: z.string().trim().min(1, "Enter the mailbox username").max(320),
+  smtpPassword: z.string().max(500).optional().or(z.literal("")),
+  fromAddress: z.email("Enter a valid \"from\" address").max(320),
+  fromName: z.string().trim().max(200).optional().or(z.literal("")),
+});

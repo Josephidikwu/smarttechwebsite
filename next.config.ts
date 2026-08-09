@@ -37,17 +37,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  images: {
-    // Cloudflare's Image Resizing handles optimization in production via the
-    // `images` binding wired up in wrangler.jsonc; keep Next's default loader
-    // for local dev.
-  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
 };
 
 export default nextConfig;
-
-import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
-initOpenNextCloudflareForDev();

@@ -1,28 +1,30 @@
 /**
  * Bootstraps the first super_admin account — the only way in, since there's
- * no public signup. Prints a `wrangler d1 execute` command rather than
- * hitting D1 directly (this script runs in plain Node, not the Workers
- * runtime, so it has no binding access).
+ * no public signup. Runs directly against DATABASE_URL (Neon).
  *
  * Usage:
  *   ADMIN_NAME="Jane Doe" ADMIN_EMAIL=jane@example.com ADMIN_PASSWORD="…" \
- *     npx tsx scripts/seed-admin.ts [--remote]
+ *     npm run seed:admin
  *
  * Env vars, not CLI args, so the password never lands in shell history.
+ * Point DATABASE_URL at whichever Neon branch you want to seed (local .env.local
+ * for dev, or pass it inline for a one-off against production).
  */
+import { eq } from "drizzle-orm";
 import { hashPassword } from "../lib/auth/password";
+import { getDb } from "../lib/db/client";
+import { users } from "../lib/db/schema";
 
 async function main() {
   const name = process.env.ADMIN_NAME;
   const email = process.env.ADMIN_EMAIL?.toLowerCase();
   const password = process.env.ADMIN_PASSWORD;
-  const remote = process.argv.includes("--remote");
 
   if (!name || !email || !password) {
     console.error(
       "Set ADMIN_NAME, ADMIN_EMAIL and ADMIN_PASSWORD env vars first, e.g.:\n" +
         '  ADMIN_NAME="Jane Doe" ADMIN_EMAIL=jane@example.com ADMIN_PASSWORD="a-strong-password" ' +
-        "npx tsx scripts/seed-admin.ts",
+        "npm run seed:admin",
     );
     process.exit(1);
   }
@@ -30,19 +32,28 @@ async function main() {
     console.error("ADMIN_PASSWORD must be at least 12 characters.");
     process.exit(1);
   }
+  if (!process.env.DATABASE_URL) {
+    console.error("DATABASE_URL is not set — point it at the Neon branch you want to seed.");
+    process.exit(1);
+  }
+
+  const db = getDb();
+  const [existing] = await db.select({ id: users.id }).from(users).where(eq(users.email, email));
+  if (existing) {
+    console.error(`A user with email ${email} already exists (id ${existing.id}) — nothing to do.`);
+    process.exit(1);
+  }
 
   const passwordHash = await hashPassword(password);
-  const escapedName = name.replace(/'/g, "''");
-  const escapedEmail = email.replace(/'/g, "''");
+  const [created] = await db
+    .insert(users)
+    .values({ name, email, passwordHash, role: "super_admin" })
+    .returning({ id: users.id });
 
-  const sql =
-    `INSERT INTO users (name, email, password_hash, role) VALUES ` +
-    `('${escapedName}', '${escapedEmail}', '${passwordHash}', 'super_admin');`;
-
-  console.log("\nRun this to create the account:\n");
-  console.log(
-    `npx wrangler d1 execute smarttechwebsite-db ${remote ? "--remote" : "--local"} --command "${sql}"\n`,
-  );
+  console.log(`\nCreated super_admin "${name}" <${email}> (id ${created.id}). Sign in at /admin/login.\n`);
 }
 
-main();
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

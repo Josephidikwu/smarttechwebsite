@@ -7,7 +7,7 @@ import { generalApplications, statusHistory, users, type JobAppStatus } from "@/
 import { StatusBadge, type Tone } from "@/components/ui/status-badge";
 import { ApplicationPipelineActions } from "@/components/sections/admin/application-pipeline-actions";
 import { updateGeneralApplicationStatus, addGeneralApplicationNote } from "@/lib/actions/careers-admin";
-import { adminFileUrl } from "@/lib/storage/r2";
+import { adminFileUrl } from "@/lib/storage/blob";
 
 export const metadata: Metadata = { title: "General Application Detail", robots: { index: false } };
 

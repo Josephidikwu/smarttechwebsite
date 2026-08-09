@@ -1,40 +1,97 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import nodemailer from "nodemailer";
+import { decryptSecret } from "@/lib/crypto/settings-encryption";
+import { getDb } from "@/lib/db/client";
+import { emailSettings } from "@/lib/db/schema";
 
 /**
- * Cloudflare Email Service wrapper (`send_email` binding — see
- * wrangler.jsonc). Best-effort: a DB write must never fail because email
- * did, so every call here is wrapped and logged rather than thrown from the
- * calling Server Action. `from` must be on a domain onboarded via
- * `wrangler email sending enable` (docs/SETUP.md) — until then, and until
- * ADMIN_NOTIFICATION_EMAIL is set, this logs and no-ops.
+ * Admin-configurable webmail (SMTP) — set from /admin/settings/email, not an
+ * env var. Best-effort: a DB write must never fail because email did, so
+ * every call here is wrapped and logged rather than thrown from the calling
+ * Server Action. Until a super_admin has saved SMTP settings, this logs and
+ * no-ops (same graceful-degradation pattern as Turnstile/GA4 before their
+ * keys are set).
  */
-async function sendMail(opts: { to: string; subject: string; html: string; text: string }) {
-  const { env } = getCloudflareContext();
-  const from = env.EMAIL_FROM_ADDRESS;
+async function getTransport() {
+  const db = getDb();
+  const [row] = await db.select().from(emailSettings).limit(1);
+  if (!row?.smtpHost || !row.smtpPort || !row.smtpUsername || !row.smtpPasswordEncrypted) {
+    return null;
+  }
+  return {
+    transport: nodemailer.createTransport({
+      host: row.smtpHost,
+      port: row.smtpPort,
+      secure: row.smtpSecure,
+      auth: { user: row.smtpUsername, pass: decryptSecret(row.smtpPasswordEncrypted) },
+    }),
+    from: row.fromName ? `"${row.fromName}" <${row.fromAddress}>` : row.fromAddress || row.smtpUsername,
+  };
+}
 
+async function sendMail(opts: { to: string; subject: string; html: string; text: string }) {
   if (!opts.to) {
     console.warn(`[email] No recipient configured — skipped "${opts.subject}". See docs/SETUP.md.`);
     return;
   }
 
+  const configured = await getTransport();
+  if (!configured) {
+    console.warn(
+      `[email] Webmail isn't configured yet — skipped "${opts.subject}". Set it up at /admin/settings/email.`,
+    );
+    return;
+  }
+
   try {
-    await env.EMAIL.send({
+    await configured.transport.sendMail({
       to: opts.to,
-      from: { email: from, name: "Smart Technology" },
+      from: configured.from,
       subject: opts.subject,
       html: opts.html,
       text: opts.text,
     });
   } catch (err) {
-    // Domain likely not onboarded to Email Service yet — don't break the
-    // user-facing flow over it.
+    // Bad SMTP credentials, host down, etc. — don't break the user-facing
+    // flow over it.
     console.error(`[email] send failed for "${opts.subject}":`, err);
   }
 }
 
 function adminEmail() {
-  const { env } = getCloudflareContext();
-  return env.ADMIN_NOTIFICATION_EMAIL;
+  return process.env.ADMIN_NOTIFICATION_EMAIL ?? "";
+}
+
+/** Used by the "Send test email" button in /admin/settings/email — surfaces
+ *  connection/auth errors immediately instead of a silent console.error. */
+export async function sendTestEmail(opts: {
+  to: string;
+  smtpHost: string;
+  smtpPort: number;
+  smtpSecure: boolean;
+  smtpUsername: string;
+  smtpPassword: string;
+  fromAddress: string;
+  fromName: string | null;
+}): Promise<{ ok: true } | { ok: false; error: string }> {
+  try {
+    const transport = nodemailer.createTransport({
+      host: opts.smtpHost,
+      port: opts.smtpPort,
+      secure: opts.smtpSecure,
+      auth: { user: opts.smtpUsername, pass: opts.smtpPassword },
+    });
+    await transport.verify();
+    await transport.sendMail({
+      to: opts.to,
+      from: opts.fromName ? `"${opts.fromName}" <${opts.fromAddress}>` : opts.fromAddress,
+      subject: "Smart Technology — test email",
+      text: "If you're reading this, your webmail (SMTP) settings are working.",
+      html: "<p>If you're reading this, your webmail (SMTP) settings are working.</p>",
+    });
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: err instanceof Error ? err.message : "Unknown error" };
+  }
 }
 
 function layout(title: string, rows: [string, string | null | undefined][]) {

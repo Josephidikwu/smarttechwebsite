@@ -7,7 +7,7 @@ import { quoteRequests } from "@/lib/db/schema";
 import { quoteRequestSchema } from "@/lib/validation/schemas";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { notifyAdminOfQuoteRequest } from "@/lib/email";
-import { uploadToR2 } from "@/lib/storage/r2";
+import { uploadToBlob } from "@/lib/storage/blob";
 
 export type QuoteFormState = {
   errors?: Record<string, string[]>;
@@ -47,7 +47,7 @@ export async function submitQuoteRequest(
   let attachmentKey: string | null = null;
   const attachment = formData.get("attachment");
   if (attachment instanceof File && attachment.size > 0) {
-    const result = await uploadToR2(attachment, { prefix: "quote-attachments", kind: "document" });
+    const result = await uploadToBlob(attachment, { prefix: "quote-attachments", kind: "document" });
     if ("error" in result) {
       return { formError: result.error, values: raw };
     }

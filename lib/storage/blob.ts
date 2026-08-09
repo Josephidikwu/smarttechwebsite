@@ -1,4 +1,4 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { put } from "@vercel/blob";
 
 const ALLOWED_DOCUMENT_TYPES = new Set([
   "application/pdf",
@@ -11,12 +11,12 @@ const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10MB
 export type UploadKind = "document" | "image";
 
 /**
- * Validates and stores a file under a private, non-guessable R2 key —
+ * Validates and stores a file under a private, non-guessable Blob pathname —
  * objects are never served from a public/predictable path (see
  * docs/SETUP.md security notes). Returns the object key to persist on the
  * owning row, or an error string.
  */
-export async function uploadToR2(
+export async function uploadToBlob(
   file: File,
   { prefix, kind }: { prefix: string; kind: UploadKind },
 ): Promise<{ key: string } | { error: string }> {
@@ -33,12 +33,17 @@ export async function uploadToR2(
     };
   }
 
-  const { env } = getCloudflareContext();
   const extension = file.name.split(".").pop()?.toLowerCase().slice(0, 10) ?? "bin";
   const key = `${prefix}/${crypto.randomUUID()}.${extension}`;
 
-  await env.UPLOADS.put(key, await file.arrayBuffer(), {
-    httpMetadata: { contentType: file.type },
+  // `access: "private"` + no random suffix on our end (we already generated
+  // a UUID key above) keeps this the same "never a guessable public URL"
+  // model R2 had — the blob's own store URL still isn't returned to the
+  // browser directly, only served back out via the authenticated route.
+  await put(key, file, {
+    access: "private",
+    contentType: file.type,
+    addRandomSuffix: false,
   });
 
   return { key };

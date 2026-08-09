@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { eq, and, lte } from "drizzle-orm";
 import { site } from "@/lib/brand";
-import { getDbAsync } from "@/lib/db/client";
+import { getDb } from "@/lib/db/client";
 import { products, trainingProgrammes, internships, jobs, blogPosts } from "@/lib/db/schema";
 
 // Reflects live admin-managed content — never frozen at build time.
@@ -34,7 +34,7 @@ const staticRoutes = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const db = await getDbAsync();
+  const db = getDb();
 
   const [productRows, trainingRows, internshipRows, jobRows, postRows] = await Promise.all([
     db.select({ slug: products.slug, updatedAt: products.updatedAt }).from(products).where(eq(products.status, "published")),

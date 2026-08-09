@@ -6,7 +6,7 @@ import { getDb } from "@/lib/db/client";
 import { internshipApplications, internships, statusHistory, users } from "@/lib/db/schema";
 import { StatusBadge, type Tone } from "@/components/ui/status-badge";
 import { InternshipApplicationActions } from "@/components/sections/admin/internship-application-actions";
-import { adminFileUrl } from "@/lib/storage/r2";
+import { adminFileUrl } from "@/lib/storage/blob";
 
 export const metadata: Metadata = { title: "Application Detail", robots: { index: false } };
 
