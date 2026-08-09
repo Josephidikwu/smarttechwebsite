@@ -3,12 +3,17 @@ import type { NextConfig } from "next";
 // Third-party origins the site actually talks to — keep this list in sync
 // with what's really loaded (Turnstile, GA4) rather than opening it wider
 // than necessary.
+const isDev = process.env.NODE_ENV !== "production";
+
 const csp = [
   "default-src 'self'",
   // 'unsafe-inline' is needed for the GA4 inline init snippet and the
   // per-page JSON-LD <script> tags (no nonce plumbing yet — see M10 notes
   // in docs/SETUP.md if tightening this further).
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://challenges.cloudflare.com",
+  // 'unsafe-eval' is dev-only — Turbopack/React Fast Refresh use eval() for
+  // HMR and never in production (confirmed by React's own dev warning), so
+  // it's added only when NODE_ENV !== "production" and never ships live.
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://challenges.cloudflare.com`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https:",
   "font-src 'self' data:",
