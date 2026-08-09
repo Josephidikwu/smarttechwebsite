@@ -188,6 +188,26 @@ export const productEnquirySchema = z.object({
   type: z.enum(["request", "bulk_quote"]),
 });
 
+// --------------------------------------------------------------------- Blog
+
+export const blogPostStatusOptions = ["draft", "scheduled", "published"] as const;
+
+export const blogTaxonomySchema = z.object({
+  name: z.string().trim().min(2, "Enter a name").max(100),
+});
+
+export const blogPostSchema = z.object({
+  title: z.string().trim().min(2, "Enter a title").max(200),
+  excerpt: z.string().trim().max(500).optional().or(z.literal("")),
+  content: z.string().trim().min(10, "Content is required").max(50000),
+  categoryId: z.string().optional().or(z.literal("")),
+  tags: z.string().trim().max(300).optional().or(z.literal("")), // comma-separated
+  status: z.enum(blogPostStatusOptions, { error: "Choose a status" }),
+  publishedAt: z.string().optional().or(z.literal("")),
+  seoTitle: z.string().trim().max(200).optional().or(z.literal("")),
+  seoDescription: z.string().trim().max(300).optional().or(z.literal("")),
+});
+
 export const generalApplicationSchema = z.object({
   fullName: z.string().trim().min(2, "Enter your full name").max(200),
   email: z.email("Enter a valid email address").max(320),

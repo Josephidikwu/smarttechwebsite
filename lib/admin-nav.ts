@@ -17,7 +17,7 @@ export const adminNav: AdminNavGroup[] = [
     items: [
       { label: "Pages", href: "/admin/pages", available: false },
       { label: "Services", href: "/admin/services", available: false },
-      { label: "Blog / Insights", href: "/admin/insights", available: false }, // M8
+      { label: "Blog / Insights", href: "/admin/insights", available: true },
       { label: "Media", href: "/admin/media", available: false },
     ],
   },
