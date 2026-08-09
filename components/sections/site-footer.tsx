@@ -5,6 +5,10 @@ import { NewsletterForm } from "@/components/sections/newsletter-form";
 import { footerColumns, site } from "@/lib/brand";
 
 export function SiteFooter() {
+  // Extract legal links separately to place them in the copyright row
+  const legalColumn = footerColumns.find((col) => col.heading === "Legal");
+  const mainColumns = footerColumns.filter((col) => col.heading !== "Legal");
+
   return (
     <footer className="border-t border-white/10 bg-[#0b0b0b] text-[var(--text)]">
       <Container className="py-16">
@@ -20,7 +24,7 @@ export function SiteFooter() {
             <NewsletterForm />
           </div>
 
-          {footerColumns.map((column) => (
+          {mainColumns.map((column) => (
             <div key={column.heading}>
               <h3 className="text-sm font-semibold text-white">{column.heading}</h3>
               <ul className="mt-4 flex flex-col gap-2.5">
@@ -39,8 +43,21 @@ export function SiteFooter() {
           ))}
         </div>
 
-        <div className="mt-14 border-t border-white/10 pt-6 text-xs text-[var(--text-muted)]">
-          © {new Date().getFullYear()} {site.legalName}. All rights reserved.
+        <div className="mt-14 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-[var(--text-muted)] sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} {site.legalName}. All rights reserved.</p>
+          {legalColumn && (
+            <div className="flex flex-wrap gap-x-4 gap-y-2">
+              {legalColumn.links.map((link, idx) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-xs text-[var(--text-muted)] transition-colors hover:text-white"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </Container>
     </footer>
