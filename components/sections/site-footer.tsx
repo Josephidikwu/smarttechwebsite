@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { Logo } from "@/components/ui/logo";
 import { NewsletterForm } from "@/components/sections/newsletter-form";
-import { footerColumns, site } from "@/lib/brand";
+import { SocialIcon } from "@/components/ui/social-icons";
+import { contact, footerColumns, site, socials } from "@/lib/brand";
 
 export function SiteFooter() {
   // Extract legal links separately to place them in the copyright row
@@ -20,6 +21,48 @@ export function SiteFooter() {
               Technology Products &middot; Procurement &middot; Software &middot; AI &middot; Data
               &middot; IT Infrastructure &middot; Digital Solutions
             </p>
+
+            {/* Contact details */}
+            <address className="mt-6 flex flex-col gap-2 text-sm not-italic text-[var(--text-muted)]">
+              <span>
+                {contact.address.lines[0]}
+                <br />
+                {contact.address.lines[1]}
+              </span>
+              <a
+                href={`mailto:${contact.email}`}
+                className="transition-colors hover:text-white"
+              >
+                {contact.email}
+              </a>
+              <span className="flex flex-wrap gap-x-3">
+                {contact.phones.map((p) => (
+                  <a
+                    key={p.tel}
+                    href={`tel:${p.tel}`}
+                    className="transition-colors hover:text-white"
+                  >
+                    {p.display}
+                  </a>
+                ))}
+              </span>
+            </address>
+
+            {/* Social icons */}
+            <div className="mt-6 flex items-center gap-3">
+              {socials.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-[var(--text-muted)] transition-colors hover:border-[var(--accent-hover)] hover:bg-white/5 hover:text-white"
+                >
+                  <SocialIcon icon={s.icon} className="h-[18px] w-[18px]" />
+                </a>
+              ))}
+            </div>
 
             <NewsletterForm />
           </div>

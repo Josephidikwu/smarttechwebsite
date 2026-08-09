@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
+import { PageHero } from "@/components/sections/page-hero";
 
 export const metadata: Metadata = {
   title: "Our Companies",
@@ -11,20 +12,13 @@ export const metadata: Metadata = {
 export default function OurCompaniesPage() {
   return (
     <>
-      <section className="pt-16 pb-4 lg:pt-24">
-        <Container>
-          <p className="text-sm font-medium tracking-wide text-[var(--color-brand-blue)] uppercase">
-            Technology Ecosystem
-          </p>
-          <h1 className="mt-3 max-w-2xl text-4xl font-bold tracking-tight text-[var(--color-ink)] sm:text-5xl">
-            More than one company. One broader technology vision.
-          </h1>
-          <p className="mt-6 max-w-xl text-[var(--color-ink-muted)]">
-            Our technology ecosystem brings together complementary capabilities across software,
-            artificial intelligence, data, digital platforms, IT services and technology products.
-          </p>
-        </Container>
-      </section>
+      <PageHero
+        eyebrow="Technology Ecosystem"
+        title="More than one company. One broader technology vision."
+        intro="Our technology ecosystem brings together complementary capabilities across software, artificial intelligence, data, digital platforms, IT services and technology products."
+        image="/images/heroes/our-companies.jpg"
+        imageAlt="Modern city skyline representing a technology ecosystem"
+      />
 
       {/* Editorial split — not two company cards. */}
       <section className="py-20 lg:py-28">

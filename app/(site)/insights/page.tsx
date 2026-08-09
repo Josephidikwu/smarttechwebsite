@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { and, desc, eq, lte } from "drizzle-orm";
 import { Container } from "@/components/ui/container";
+import { PageHero } from "@/components/sections/page-hero";
 import { getDb } from "@/lib/db/client";
 import { blogPosts, blogCategories } from "@/lib/db/schema";
 
@@ -43,19 +44,17 @@ export default async function InsightsPage({
     .orderBy(desc(blogPosts.publishedAt));
 
   return (
-    <section className="pt-16 pb-28 lg:pt-24 lg:pb-36">
-      <Container>
-        <p className="text-sm font-medium tracking-wide text-[var(--color-brand-blue)] uppercase">
-          Insights
-        </p>
-        <h1 className="mt-3 max-w-2xl text-4xl font-bold tracking-tight text-[var(--color-ink)] sm:text-5xl">
-          Ideas, Technology &amp; Opportunities
-        </h1>
-        <p className="mt-6 max-w-xl text-[var(--color-ink-muted)]">
-          Explore perspectives, guides and useful information around technology, artificial
-          intelligence, digital transformation, gadgets, careers and the evolving digital economy.
-        </p>
+    <>
+      <PageHero
+        eyebrow="Insights"
+        title="Ideas, Technology & Opportunities"
+        intro="Explore perspectives, guides and useful information around technology, artificial intelligence, digital transformation, gadgets, careers and the evolving digital economy."
+        image="/images/heroes/insights.jpg"
+        imageAlt="Reading and exploring technology insights"
+      />
 
+      <section className="pt-16 pb-28 lg:pt-20 lg:pb-36">
+      <Container>
         {categoryRows.length > 0 && (
           <div className="mt-10 flex flex-wrap gap-2">
             <Link
@@ -105,6 +104,7 @@ export default async function InsightsPage({
           </p>
         )}
       </Container>
-    </section>
+      </section>
+    </>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
+import { PageHero } from "@/components/sections/page-hero";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -19,15 +20,16 @@ const values = [
 export default function AboutPage() {
   return (
     <>
-      <section className="pt-16 pb-4 lg:pt-24">
+      <PageHero
+        eyebrow="About Us"
+        title="Technology With Purpose"
+        image="/images/heroes/about.jpg"
+        imageAlt="Smart Technology team and workspace"
+      />
+
+      <section className="pt-16 pb-4">
         <Container>
-          <p className="text-sm font-medium tracking-wide text-[var(--color-brand-blue)] uppercase">
-            About Us
-          </p>
-          <h1 className="mt-3 max-w-2xl text-4xl font-bold tracking-tight text-[var(--color-ink)] sm:text-5xl">
-            Technology With Purpose
-          </h1>
-          <div className="mt-8 grid gap-6 lg:grid-cols-12 lg:gap-8">
+          <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
             <p className="text-lg text-[var(--color-ink-muted)] lg:col-span-7">
               Smart Technology Information Hub Limited is a Nigerian technology company operating
               across technology products, procurement, software, artificial intelligence, data,

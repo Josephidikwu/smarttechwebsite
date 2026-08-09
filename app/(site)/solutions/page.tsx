@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
+import { PageHero } from "@/components/sections/page-hero";
 import { pillars } from "@/lib/content/pillars";
 
 export const metadata: Metadata = {
@@ -12,20 +13,13 @@ export const metadata: Metadata = {
 export default function SolutionsPage() {
   return (
     <>
-      <section className="pt-16 pb-4 lg:pt-24">
-        <Container>
-          <p className="text-sm font-medium tracking-wide text-[var(--color-brand-blue)] uppercase">
-            Solutions
-          </p>
-          <h1 className="mt-3 max-w-2xl text-4xl font-bold tracking-tight text-[var(--color-ink)] sm:text-5xl">
-            Technology for the way you live, work and grow.
-          </h1>
-          <p className="mt-6 max-w-xl text-[var(--color-ink-muted)]">
-            We bring together technology products, digital solutions and professional services to
-            meet the evolving needs of individuals, businesses and organisations.
-          </p>
-        </Container>
-      </section>
+      <PageHero
+        eyebrow="Solutions"
+        title="Technology for the way you live, work and grow."
+        intro="We bring together technology products, digital solutions and professional services to meet the evolving needs of individuals, businesses and organisations."
+        image="/images/heroes/solutions.jpg"
+        imageAlt="Team collaborating on technology solutions"
+      />
 
       <section className="py-20 lg:py-24">
         <Container>

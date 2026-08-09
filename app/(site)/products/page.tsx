@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { and, desc, eq } from "drizzle-orm";
 import { Container } from "@/components/ui/container";
+import { PageHero } from "@/components/sections/page-hero";
 import { Button } from "@/components/ui/button";
 import { getDb } from "@/lib/db/client";
 import { products, categories } from "@/lib/db/schema";
@@ -72,20 +73,13 @@ export default async function ProductsPage({
 
   return (
     <>
-      <section className="pt-16 pb-4 lg:pt-24">
-        <Container>
-          <p className="text-sm font-medium tracking-wide text-[var(--color-brand-blue)] uppercase">
-            Technology Products
-          </p>
-          <h1 className="mt-3 max-w-2xl text-4xl font-bold tracking-tight text-[var(--color-ink)] sm:text-5xl">
-            Technology you&apos;ll want to use.
-          </h1>
-          <p className="mt-6 max-w-xl text-[var(--color-ink-muted)]">
-            From everyday devices to business technology, we help customers access products
-            suited to the way they work, learn, communicate and live.
-          </p>
-        </Container>
-      </section>
+      <PageHero
+        eyebrow="Technology Products"
+        title="Technology you'll want to use."
+        intro="From everyday devices to business technology, we help customers access products suited to the way they work, learn, communicate and live."
+        image="/images/heroes/products.jpg"
+        imageAlt="Modern technology products and devices"
+      />
 
       <section className="py-16 lg:py-20">
         <Container>

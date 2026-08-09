@@ -17,15 +17,48 @@ export type NavItem = { label: string; href: string };
 
 export const primaryNav: NavItem[] = [
   { label: "About", href: "/about" },
+  { label: "Our Companies", href: "/our-companies" },
   { label: "Solutions", href: "/solutions" },
   { label: "Products", href: "/products" },
   { label: "Opportunities", href: "/opportunities" },
-  { label: "Our Companies", href: "/our-companies" },
   { label: "Insights", href: "/insights" },
   { label: "Contact", href: "/contact" },
 ];
 
 export const primaryCta: NavItem = { label: "Get Started", href: "/contact" };
+
+/**
+ * Company contact details (real data supplied by the owner). Displayed in the
+ * footer and on the Contact page — always read from here, never hardcode.
+ */
+export const contact = {
+  address: {
+    lines: ["Shop D-1, 27 Dawaki Modern Market", "Abuja, FCT"],
+    full: "Shop D-1, 27 Dawaki Modern Market, Abuja, FCT",
+  },
+  email: "smart.tech2047@gmail.com",
+  // display = human-readable; tel = E.164 for the tel: link (+234, drop leading 0)
+  phones: [
+    { display: "0814 834 4052", tel: "+2348148344052" },
+    { display: "0816 760 8848", tel: "+2348167608848" },
+  ],
+} as const;
+
+export type SocialLink = {
+  label: string;
+  href: string;
+  icon: "facebook" | "instagram" | "tiktok";
+};
+
+/**
+ * Social profiles. hrefs are "#" placeholders until the owner supplies the
+ * real profile URLs — just swap the href values here when they arrive.
+ */
+export const socials: SocialLink[] = [
+  { label: "Facebook", href: "#", icon: "facebook" },
+  { label: "Instagram", href: "#", icon: "instagram" },
+  { label: "TikTok", href: "#", icon: "tiktok" },
+];
 
 export const footerColumns: { heading: string; links: NavItem[] }[] = [
   {

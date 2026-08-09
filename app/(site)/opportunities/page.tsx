@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
+import { PageHero } from "@/components/sections/page-hero";
 
 export const metadata: Metadata = {
   title: "Opportunities",
@@ -32,21 +33,13 @@ const opportunities = [
 export default function OpportunitiesPage() {
   return (
     <>
-      <section className="pt-16 pb-4 lg:pt-24">
-        <Container>
-          <p className="text-sm font-medium tracking-wide text-[var(--color-brand-blue)] uppercase">
-            Opportunities
-          </p>
-          <h1 className="mt-3 max-w-2xl text-4xl font-bold tracking-tight text-[var(--color-ink)] sm:text-5xl">
-            Learn. Experience. Build.
-          </h1>
-          <p className="mt-6 max-w-xl text-[var(--color-ink-muted)]">
-            Technology creates opportunities when people have the knowledge, skills and
-            experience to participate. Smart Technology provides pathways for people who want to
-            learn technology, gain practical experience and build careers.
-          </p>
-        </Container>
-      </section>
+      <PageHero
+        eyebrow="Opportunities"
+        title="Learn. Experience. Build."
+        intro="Technology creates opportunities when people have the knowledge, skills and experience to participate. Smart Technology provides pathways for people who want to learn technology, gain practical experience and build careers."
+        image="/images/heroes/opportunities.jpg"
+        imageAlt="People learning and building with technology"
+      />
 
       <section className="py-20 lg:py-24">
         <Container>
