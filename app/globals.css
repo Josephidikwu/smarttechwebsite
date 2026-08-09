@@ -46,7 +46,7 @@
   --color-dark-ink: var(--color-dark-ink);
   --color-dark-ink-muted: var(--color-dark-ink-muted);
   --color-dark-border: var(--color-dark-border);
-  --font-sans: var(--font-plus-jakarta);
+  --font-sans: var(--font-inter);
 }
 
 body {
@@ -61,6 +61,97 @@ body {
   background: var(--color-dark-bg);
   color: var(--color-dark-ink);
 }
+
+/* ============================================================
+   Lorolabs-inspired redesign layer
+   Dark, editorial, high-contrast art direction with a crimson
+   accent — applied to the homepage + site chrome (header/footer).
+   These tokens are additive and do NOT alter the light-first
+   foundation used by inner marketing pages.
+   ============================================================ */
+:root {
+  --bg: #0f0f0f;
+  --bg-card: #1a1a1a;
+  --accent: #c0392b;
+  --accent-hover: #e74c3c;
+  --text: #ffffff;
+  --text-muted: #888888;
+  --text-secondary: #cccccc;
+}
+
+/* Headline display treatment */
+.loro-display {
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+/* Buttons used across the redesigned sections */
+.btn-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.85rem 1.6rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-accent:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px -12px rgba(231, 76, 60, 0.6);
+}
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  padding: 0.85rem 1.6rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.btn-ghost:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Service / image cards */
+.loro-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.loro-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  border-color: rgba(231, 76, 60, 0.5);
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8);
+}
+.loro-card:hover .loro-card-img {
+  transform: scale(1.08);
+}
+.loro-card-img {
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* subtle fade-up for hero content */
+@keyframes loroFadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.loro-fade-up { animation: loroFadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.loro-delay-1 { animation-delay: 0.1s; }
+.loro-delay-2 { animation-delay: 0.22s; }
+.loro-delay-3 { animation-delay: 0.34s; }
+.loro-delay-4 { animation-delay: 0.46s; }
 
 @media (prefers-reduced-motion: reduce) {
   *,
