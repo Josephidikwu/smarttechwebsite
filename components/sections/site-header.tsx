@@ -16,7 +16,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0b0b]/80 backdrop-blur-md">
-      <Container className="flex h-18 items-center justify-between py-4">
+      <Container className="flex h-20 items-center justify-between py-4">
         <Logo />
 
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">

@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
+import { Logo } from "@/components/ui/logo";
 import { NewsletterForm } from "@/components/sections/newsletter-form";
 import { footerColumns, site } from "@/lib/brand";
 
@@ -10,13 +10,8 @@ export function SiteFooter() {
       <Container className="py-16">
         <div className="grid grid-cols-2 gap-10 lg:grid-cols-6">
           <div className="col-span-2">
-            <div className="flex items-center gap-2.5">
-              <Image src="/brand/smart-icon.svg" alt="" width={32} height={32} />
-              <span className="text-base font-bold tracking-tight text-white">
-                Smart<span className="text-[var(--accent-hover)]">Technology</span>
-              </span>
-            </div>
-            <p className="mt-4 text-sm font-medium text-white">{site.tagline}</p>
+            <Logo iconHeight={44} />
+            <p className="mt-5 text-sm font-medium text-white">{site.tagline}</p>
             <p className="mt-2 max-w-xs text-sm text-[var(--text-muted)]">
               Technology Products &middot; Procurement &middot; Software &middot; AI &middot; Data
               &middot; IT Infrastructure &middot; Digital Solutions
