@@ -21,7 +21,13 @@ function SubmitButton() {
   );
 }
 
-export function TrainingApplyForm({ programmeId }: { programmeId: number }) {
+export function TrainingApplyForm({
+  programmeId,
+  turnstileSiteKey,
+}: {
+  programmeId: number;
+  turnstileSiteKey: string | null;
+}) {
   const action = submitTrainingApplication.bind(null, programmeId);
   const [state, formAction] = useActionState(action, initialState);
   const values = state.values ?? {};
@@ -115,7 +121,7 @@ export function TrainingApplyForm({ programmeId }: { programmeId: number }) {
         />
       </FormField>
 
-      <TurnstileWidget action="training_application" />
+      <TurnstileWidget action="training_application" siteKey={turnstileSiteKey} />
 
       {state.formError && (
         <p className="text-sm text-red-600" role="alert">

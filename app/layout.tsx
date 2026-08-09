@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import { site } from "@/lib/brand";
+import { getGA4MeasurementId } from "@/lib/settings/site-settings";
 import { GA4Script } from "@/components/analytics/ga4-script";
 import { PageViewTracker } from "@/components/analytics/page-view-tracker";
 import { OrganizationSchema } from "@/components/analytics/organization-schema";
@@ -45,12 +46,14 @@ export const metadata: Metadata = {
  * (header/footer) lives in app/(site)/layout.tsx — the admin dashboard
  * under app/admin/ intentionally does not get it.
  */
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const measurementId = await getGA4MeasurementId();
+
   return (
     <html lang="en" className={`${plusJakarta.variable} ${inter.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <OrganizationSchema />
-        <GA4Script />
+        <GA4Script measurementId={measurementId} />
         <Suspense fallback={null}>
           <PageViewTracker />
         </Suspense>

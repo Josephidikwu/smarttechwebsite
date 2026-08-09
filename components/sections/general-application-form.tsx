@@ -21,7 +21,7 @@ function SubmitButton() {
   );
 }
 
-export function GeneralApplicationForm() {
+export function GeneralApplicationForm({ turnstileSiteKey }: { turnstileSiteKey: string | null }) {
   const [state, formAction] = useActionState(submitGeneralApplication, initialState);
   const values = state.values ?? {};
 
@@ -68,7 +68,7 @@ export function GeneralApplicationForm() {
         />
       </FormField>
 
-      <TurnstileWidget action="general_application" />
+      <TurnstileWidget action="general_application" siteKey={turnstileSiteKey} />
 
       {state.formError && (
         <p className="text-sm text-red-600" role="alert">

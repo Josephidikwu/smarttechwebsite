@@ -3,12 +3,13 @@
 import Script from "next/script";
 
 /**
- * Renders nothing until NEXT_PUBLIC_GA_MEASUREMENT_ID is set (see
- * docs/SETUP.md) — mirrors the same graceful-degradation pattern as
- * TurnstileWidget, so the site works fully before analytics is configured.
+ * Renders nothing until a GA4 Measurement ID is set at Settings ->
+ * Integrations (admin dashboard) — mirrors the same graceful-degradation
+ * pattern as TurnstileWidget, so the site works fully before analytics is
+ * configured. `measurementId` is fetched server-side (see app/layout.tsx)
+ * rather than read from an env var, so it can change without a redeploy.
  */
-export function GA4Script() {
-  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+export function GA4Script({ measurementId }: { measurementId: string | null }) {
   if (!measurementId) return null;
 
   return (

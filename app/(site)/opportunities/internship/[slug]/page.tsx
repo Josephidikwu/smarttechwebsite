@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/container";
 import { getDb } from "@/lib/db/client";
 import { internships } from "@/lib/db/schema";
 import { InternshipApplyForm } from "@/components/sections/internship-apply-form";
+import { getPublicSiteSettings } from "@/lib/settings/site-settings";
 
 // Reads live internship data (admin-managed) — never statically cached.
 export const dynamic = "force-dynamic";
@@ -36,6 +37,7 @@ export default async function InternshipDetailPage({
   const db = getDb();
   const [internship] = await db.select().from(internships).where(eq(internships.slug, slug)).limit(1);
   if (!internship || internship.status !== "open") notFound();
+  const { turnstileSiteKey } = await getPublicSiteSettings();
 
   return (
     <Container className="grid gap-16 py-20 lg:grid-cols-12 lg:py-28">
@@ -97,7 +99,7 @@ export default async function InternshipDetailPage({
       </div>
 
       <div className="lg:col-span-7">
-        <InternshipApplyForm internshipId={internship.id} />
+        <InternshipApplyForm internshipId={internship.id} turnstileSiteKey={turnstileSiteKey} />
       </div>
     </Container>
   );

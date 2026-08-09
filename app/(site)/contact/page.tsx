@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/sections/page-hero";
 import { ContactForm } from "@/components/sections/contact-form";
+import { getPublicSiteSettings } from "@/lib/settings/site-settings";
 import { SocialIcon } from "@/components/ui/social-icons";
 import { contact, socials } from "@/lib/brand";
 
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
     "Have a project, technology requirement, procurement request or question? Tell Smart Technology what you need and let's explore how we can help.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const { turnstileSiteKey } = await getPublicSiteSettings();
+
   return (
     <>
       <PageHero
@@ -96,7 +99,7 @@ export default function ContactPage() {
         </div>
 
         <div className="lg:col-span-7">
-          <ContactForm />
+          <ContactForm turnstileSiteKey={turnstileSiteKey} />
         </div>
       </Container>
     </>

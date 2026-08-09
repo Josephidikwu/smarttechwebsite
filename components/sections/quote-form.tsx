@@ -21,7 +21,7 @@ function SubmitButton() {
   );
 }
 
-export function QuoteForm() {
+export function QuoteForm({ turnstileSiteKey }: { turnstileSiteKey: string | null }) {
   const [state, formAction] = useActionState(submitQuoteRequest, initialState);
   const values = state.values ?? {};
 
@@ -122,7 +122,7 @@ export function QuoteForm() {
         />
       </FormField>
 
-      <TurnstileWidget action="quote_request" />
+      <TurnstileWidget action="quote_request" siteKey={turnstileSiteKey} />
 
       {state.formError && (
         <p className="text-sm text-red-600" role="alert">

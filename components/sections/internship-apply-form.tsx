@@ -21,7 +21,13 @@ function SubmitButton() {
   );
 }
 
-export function InternshipApplyForm({ internshipId }: { internshipId: number }) {
+export function InternshipApplyForm({
+  internshipId,
+  turnstileSiteKey,
+}: {
+  internshipId: number;
+  turnstileSiteKey: string | null;
+}) {
   const action = submitInternshipApplication.bind(null, internshipId);
   const [state, formAction] = useActionState(action, initialState);
   const values = state.values ?? {};
@@ -107,7 +113,7 @@ export function InternshipApplyForm({ internshipId }: { internshipId: number }) 
         <input id="availability" name="availability" defaultValue={values.availability} className={textInputClasses()} />
       </FormField>
 
-      <TurnstileWidget action="internship_application" />
+      <TurnstileWidget action="internship_application" siteKey={turnstileSiteKey} />
 
       {state.formError && (
         <p className="text-sm text-red-600" role="alert">

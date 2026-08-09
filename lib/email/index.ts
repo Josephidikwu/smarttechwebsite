@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import { decryptSecret } from "@/lib/crypto/settings-encryption";
 import { getDb } from "@/lib/db/client";
 import { emailSettings } from "@/lib/db/schema";
+import { getAdminNotificationEmail } from "@/lib/settings/site-settings";
 
 /**
  * Admin-configurable webmail (SMTP) — set from /admin/settings/email, not an
@@ -57,8 +58,8 @@ async function sendMail(opts: { to: string; subject: string; html: string; text:
   }
 }
 
-function adminEmail() {
-  return process.env.ADMIN_NOTIFICATION_EMAIL ?? "";
+async function adminEmail() {
+  return getAdminNotificationEmail();
 }
 
 /** Used by the "Send test email" button in /admin/settings/email — surfaces
@@ -131,7 +132,7 @@ export async function notifyAdminOfContactSubmission(s: {
     ["What they need", s.subject],
     ["Message", s.message],
   ]);
-  await sendMail({ to: adminEmail(), subject: `New enquiry: ${s.subject}`, html, text });
+  await sendMail({ to: await adminEmail(), subject: `New enquiry: ${s.subject}`, html, text });
 }
 
 /** "We've received your application" — docs/content-deck.md §25, reused across
@@ -167,7 +168,7 @@ export async function notifyAdminOfTrainingApplication(a: {
     ["Programme", a.programmeName],
   ]);
   await sendMail({
-    to: adminEmail(),
+    to: await adminEmail(),
     subject: `New training application: ${a.programmeName}`,
     html,
     text,
@@ -187,7 +188,7 @@ export async function notifyAdminOfInternshipApplication(a: {
     ["Position", a.positionName],
   ]);
   await sendMail({
-    to: adminEmail(),
+    to: await adminEmail(),
     subject: `New internship application: ${a.positionName}`,
     html,
     text,
@@ -206,7 +207,7 @@ export async function notifyAdminOfJobApplication(a: {
     ["Phone", a.phone],
     ["Job", a.jobTitle],
   ]);
-  await sendMail({ to: adminEmail(), subject: `New job application: ${a.jobTitle}`, html, text });
+  await sendMail({ to: await adminEmail(), subject: `New job application: ${a.jobTitle}`, html, text });
 }
 
 export async function notifyAdminOfGeneralApplication(a: {
@@ -219,7 +220,7 @@ export async function notifyAdminOfGeneralApplication(a: {
     ["Email", a.email],
     ["Phone", a.phone],
   ]);
-  await sendMail({ to: adminEmail(), subject: "New general career application", html, text });
+  await sendMail({ to: await adminEmail(), subject: "New general career application", html, text });
 }
 
 export async function notifyAdminOfProductEnquiry(e: {
@@ -243,7 +244,7 @@ export async function notifyAdminOfProductEnquiry(e: {
     ],
   );
   await sendMail({
-    to: adminEmail(),
+    to: await adminEmail(),
     subject: `${e.type === "bulk_quote" ? "Bulk quote request" : "Product enquiry"}: ${e.productName}`,
     html,
     text,
@@ -268,5 +269,5 @@ export async function notifyAdminOfQuoteRequest(q: {
     ["Budget range", q.budgetRange],
     ["Description", q.description],
   ]);
-  await sendMail({ to: adminEmail(), subject: "New quote request", html, text });
+  await sendMail({ to: await adminEmail(), subject: "New quote request", html, text });
 }

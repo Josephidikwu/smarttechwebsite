@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { GeneralApplicationForm } from "@/components/sections/general-application-form";
+import { getPublicSiteSettings } from "@/lib/settings/site-settings";
 
 export const metadata: Metadata = {
   title: "General Application",
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
     "We're always interested in meeting talented people. Submit a general application and tell Smart Technology how you could contribute.",
 };
 
-export default function GeneralApplicationPage() {
+export default async function GeneralApplicationPage() {
+  const { turnstileSiteKey } = await getPublicSiteSettings();
+
   return (
     <Container className="grid gap-16 py-20 lg:grid-cols-12 lg:py-28">
       <div className="lg:col-span-5">
@@ -25,7 +28,7 @@ export default function GeneralApplicationPage() {
       </div>
 
       <div className="lg:col-span-7">
-        <GeneralApplicationForm />
+        <GeneralApplicationForm turnstileSiteKey={turnstileSiteKey} />
       </div>
     </Container>
   );

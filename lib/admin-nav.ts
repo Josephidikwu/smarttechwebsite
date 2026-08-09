@@ -60,7 +60,7 @@ export const adminNav: AdminNavGroup[] = [
       { label: "Email (Webmail)", href: "/admin/settings/email", available: true },
       { label: "Site Settings", href: "/admin/settings/site", available: false },
       { label: "SEO Settings", href: "/admin/settings/seo", available: false }, // M9
-      { label: "Integrations", href: "/admin/settings/integrations", available: false },
+      { label: "Integrations", href: "/admin/settings/integrations", available: true },
     ],
   },
 ];

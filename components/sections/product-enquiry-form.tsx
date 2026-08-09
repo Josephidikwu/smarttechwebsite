@@ -34,7 +34,13 @@ function SubmitButtons() {
   );
 }
 
-export function ProductEnquiryForm({ productId }: { productId: number }) {
+export function ProductEnquiryForm({
+  productId,
+  turnstileSiteKey,
+}: {
+  productId: number;
+  turnstileSiteKey: string | null;
+}) {
   const action = submitProductEnquiry.bind(null, productId);
   const [state, formAction] = useActionState(action, initialState);
 
@@ -60,7 +66,7 @@ export function ProductEnquiryForm({ productId }: { productId: number }) {
         <textarea id="message" name="message" rows={3} className={textInputClasses()} />
       </FormField>
 
-      <TurnstileWidget action="product_enquiry" />
+      <TurnstileWidget action="product_enquiry" siteKey={turnstileSiteKey} />
 
       {state.formError && (
         <p className="text-sm text-red-600" role="alert">

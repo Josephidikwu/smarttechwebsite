@@ -6,6 +6,7 @@ import { getDb } from "@/lib/db/client";
 import { jobs } from "@/lib/db/schema";
 import { JobApplyForm } from "@/components/sections/job-apply-form";
 import { site } from "@/lib/brand";
+import { getPublicSiteSettings } from "@/lib/settings/site-settings";
 
 // Reads live job data (admin-managed) — never statically cached.
 export const dynamic = "force-dynamic";
@@ -30,6 +31,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
   const db = getDb();
   const [job] = await db.select().from(jobs).where(eq(jobs.slug, slug)).limit(1);
   if (!job || job.status !== "open") notFound();
+  const { turnstileSiteKey } = await getPublicSiteSettings();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -127,7 +129,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
         </div>
 
         <div className="lg:col-span-7">
-          <JobApplyForm jobId={job.id} />
+          <JobApplyForm jobId={job.id} turnstileSiteKey={turnstileSiteKey} />
         </div>
       </div>
     </Container>

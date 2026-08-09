@@ -21,7 +21,13 @@ function SubmitButton() {
   );
 }
 
-export function JobApplyForm({ jobId }: { jobId: number }) {
+export function JobApplyForm({
+  jobId,
+  turnstileSiteKey,
+}: {
+  jobId: number;
+  turnstileSiteKey: string | null;
+}) {
   const action = submitJobApplication.bind(null, jobId);
   const [state, formAction] = useActionState(action, initialState);
   const values = state.values ?? {};
@@ -75,7 +81,7 @@ export function JobApplyForm({ jobId }: { jobId: number }) {
         <textarea id="additionalInfo" name="additionalInfo" rows={3} defaultValue={values.additionalInfo} className={textInputClasses()} />
       </FormField>
 
-      <TurnstileWidget action="job_application" />
+      <TurnstileWidget action="job_application" siteKey={turnstileSiteKey} />
 
       {state.formError && (
         <p className="text-sm text-red-600" role="alert">

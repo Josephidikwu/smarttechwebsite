@@ -22,7 +22,7 @@ function SubmitButton() {
   );
 }
 
-export function ContactForm() {
+export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey: string | null }) {
   const [state, formAction] = useActionState(submitContactForm, initialState);
   const values = state.values ?? {};
 
@@ -105,7 +105,7 @@ export function ContactForm() {
         />
       </FormField>
 
-      <TurnstileWidget action="contact" />
+      <TurnstileWidget action="contact" siteKey={turnstileSiteKey} />
 
       {state.formError && (
         <p className="text-sm text-red-600" role="alert">

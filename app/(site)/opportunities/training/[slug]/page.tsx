@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/container";
 import { getDb } from "@/lib/db/client";
 import { trainingProgrammes } from "@/lib/db/schema";
 import { TrainingApplyForm } from "@/components/sections/training-apply-form";
+import { getPublicSiteSettings } from "@/lib/settings/site-settings";
 
 // Reads live programme data (admin-managed) — never statically cached.
 export const dynamic = "force-dynamic";
@@ -37,6 +38,7 @@ export default async function TrainingProgrammeDetailPage({
     .where(eq(trainingProgrammes.slug, slug))
     .limit(1);
   if (!programme || programme.status !== "open") notFound();
+  const { turnstileSiteKey } = await getPublicSiteSettings();
 
   return (
     <Container className="grid gap-16 py-20 lg:grid-cols-12 lg:py-28">
@@ -90,7 +92,7 @@ export default async function TrainingProgrammeDetailPage({
       </div>
 
       <div className="lg:col-span-7">
-        <TrainingApplyForm programmeId={programme.id} />
+        <TrainingApplyForm programmeId={programme.id} turnstileSiteKey={turnstileSiteKey} />
       </div>
     </Container>
   );

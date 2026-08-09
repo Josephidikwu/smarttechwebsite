@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { QuoteForm } from "@/components/sections/quote-form";
+import { getPublicSiteSettings } from "@/lib/settings/site-settings";
 
 export const metadata: Metadata = {
   title: "Request a Quote",
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
     "Whether you need technology equipment, software development, IT infrastructure or a digital solution, tell Smart Technology about your requirement.",
 };
 
-export default function QuotePage() {
+export default async function QuotePage() {
+  const { turnstileSiteKey } = await getPublicSiteSettings();
+
   return (
     <Container className="grid gap-16 py-20 lg:grid-cols-12 lg:py-28">
       <div className="lg:col-span-5">
@@ -25,7 +28,7 @@ export default function QuotePage() {
       </div>
 
       <div className="lg:col-span-7">
-        <QuoteForm />
+        <QuoteForm turnstileSiteKey={turnstileSiteKey} />
       </div>
     </Container>
   );

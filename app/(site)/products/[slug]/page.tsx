@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/container";
 import { getDb } from "@/lib/db/client";
 import { products, categories, brands } from "@/lib/db/schema";
 import { ProductEnquiryForm } from "@/components/sections/product-enquiry-form";
+import { getPublicSiteSettings } from "@/lib/settings/site-settings";
 
 // Reads live product data (admin-managed) — never statically cached.
 export const dynamic = "force-dynamic";
@@ -35,6 +36,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const db = getDb();
   const [product] = await db.select().from(products).where(eq(products.slug, slug)).limit(1);
   if (!product || product.status !== "published") notFound();
+  const { turnstileSiteKey } = await getPublicSiteSettings();
 
   const [category, brand] = await Promise.all([
     product.categoryId
@@ -107,7 +109,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           team.
         </p>
         <div className="mt-6">
-          <ProductEnquiryForm productId={product.id} />
+          <ProductEnquiryForm productId={product.id} turnstileSiteKey={turnstileSiteKey} />
         </div>
       </div>
     </Container>

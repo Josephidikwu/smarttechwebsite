@@ -229,3 +229,14 @@ export const emailSettingsSchema = z.object({
   fromAddress: z.email("Enter a valid \"from\" address").max(320),
   fromName: z.string().trim().max(200).optional().or(z.literal("")),
 });
+
+// ---------------------------------------------------------------- Integrations
+
+/** turnstileSecretKey blank on save keeps the currently stored one. Everything is optional —
+ *  clearing a field turns that integration off (site works fine with none of them set). */
+export const integrationSettingsSchema = z.object({
+  ga4MeasurementId: z.string().trim().max(30).optional().or(z.literal("")),
+  adminNotificationEmail: z.email("Enter a valid email address").optional().or(z.literal("")),
+  turnstileSiteKey: z.string().trim().max(200).optional().or(z.literal("")),
+  turnstileSecretKey: z.string().trim().max(200).optional().or(z.literal("")),
+});
