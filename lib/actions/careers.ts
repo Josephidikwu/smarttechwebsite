@@ -97,7 +97,7 @@ export async function submitJobApplication(
     }),
   ]);
 
-  redirect("/opportunities/application-received");
+  redirect("/opportunities/application-received?type=job");
 }
 
 export type GeneralApplicationState = {
@@ -161,5 +161,5 @@ export async function submitGeneralApplication(
     }),
   ]);
 
-  redirect("/opportunities/application-received");
+  redirect("/opportunities/application-received?type=general");
 }

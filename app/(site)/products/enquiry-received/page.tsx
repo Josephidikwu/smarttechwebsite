@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import { ConversionTracker } from "@/components/analytics/conversion-tracker";
 
 export const metadata: Metadata = { title: "Product Enquiry Received" };
 
 export default function ProductEnquiryReceivedPage() {
   return (
     <Container className="flex min-h-[60vh] flex-col items-center justify-center gap-4 py-20 text-center">
+      <ConversionTracker event="product_enquiry" />
       <h1 className="text-3xl font-bold tracking-tight text-[var(--color-ink)]">
         Product Enquiry Received.
       </h1>

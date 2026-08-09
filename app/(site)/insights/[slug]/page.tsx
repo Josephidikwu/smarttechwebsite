@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { Container } from "@/components/ui/container";
 import { getDb } from "@/lib/db/client";
 import { blogPosts, blogCategories, users } from "@/lib/db/schema";
+import { site } from "@/lib/brand";
 
 // Reads live article data (admin-managed) — never statically cached.
 export const dynamic = "force-dynamic";
@@ -55,9 +56,19 @@ export default async function InsightArticlePage({ params }: { params: Promise<{
     notFound();
   }
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    datePublished: post.publishedAt.toISOString(),
+    author: post.authorName ? { "@type": "Person", name: post.authorName } : undefined,
+    publisher: { "@type": "Organization", name: site.legalName },
+  };
+
   return (
     <article className="pt-16 pb-28 lg:pt-24">
       <Container className="max-w-3xl">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <div className="flex items-center gap-3">
           {post.categoryName && (
             <span className="text-xs font-medium tracking-wide text-[var(--color-brand-blue)] uppercase">

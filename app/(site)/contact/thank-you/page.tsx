@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import { ConversionTracker } from "@/components/analytics/conversion-tracker";
 
 export const metadata: Metadata = { title: "Thanks for reaching out" };
 
 export default function ContactThankYouPage() {
   return (
     <Container className="flex min-h-[60vh] flex-col items-center justify-center gap-4 py-20 text-center">
+      <ConversionTracker event="contact_form_submit" />
       <h1 className="text-3xl font-bold tracking-tight text-[var(--color-ink)]">
         Thanks for reaching out.
       </h1>

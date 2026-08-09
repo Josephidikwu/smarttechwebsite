@@ -91,5 +91,5 @@ export async function submitTrainingApplication(
     }),
   ]);
 
-  redirect("/opportunities/application-received");
+  redirect("/opportunities/application-received?type=training");
 }

@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/container";
 import { getDb } from "@/lib/db/client";
 import { jobs } from "@/lib/db/schema";
 import { JobApplyForm } from "@/components/sections/job-apply-form";
+import { site } from "@/lib/brand";
 
 // Reads live job data (admin-managed) — never statically cached.
 export const dynamic = "force-dynamic";
@@ -30,8 +31,23 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
   const [job] = await db.select().from(jobs).where(eq(jobs.slug, slug)).limit(1);
   if (!job || job.status !== "open") notFound();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    title: job.title,
+    description: job.description ?? job.title,
+    datePosted: job.createdAt.toISOString(),
+    validThrough: job.applicationDeadline ? job.applicationDeadline.toISOString() : undefined,
+    employmentType: job.employmentType ?? undefined,
+    hiringOrganization: { "@type": "Organization", name: site.legalName, sameAs: site.url },
+    jobLocation: job.location
+      ? { "@type": "Place", address: { "@type": "PostalAddress", addressLocality: job.location } }
+      : undefined,
+  };
+
   return (
     <Container className="py-20 lg:py-28">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <p className="text-sm font-medium tracking-wide text-[var(--color-brand-blue)] uppercase">
         {job.department || "Careers"}
       </p>

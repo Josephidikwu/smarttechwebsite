@@ -45,9 +45,11 @@ Needed before the next three steps. Once you've picked/confirmed the domain:
 ## 5. Google Analytics 4
 
 Create a GA4 property, grab the Measurement ID (`G-XXXXXXX`), and set it as
-`NEXT_PUBLIC_GA_MEASUREMENT_ID` in `.env.local` (dev) and `wrangler.jsonc` → `vars` (prod). Wiring
-the actual `gtag.js` + conversion events happens in M9, but the ID can be dropped in whenever
-you have it.
+`NEXT_PUBLIC_GA_MEASUREMENT_ID` in `.env.local` (dev) and `wrangler.jsonc` → `vars` (prod). The
+`gtag.js` snippet, route-change page views, and the conversion events
+(`contact_form_submit`, `product_enquiry`, `training_application`, `internship_application`,
+`career_application`, `general_application`, `quote_request`) are already wired in — the site
+just no-ops on analytics until this ID is set, same pattern as Turnstile below.
 
 ## 6. Cloudflare Turnstile
 

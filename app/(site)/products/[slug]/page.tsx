@@ -47,8 +47,31 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
   const specs = product.specifications ?? {};
 
+  const schemaAvailability =
+    product.stockStatus === "in_stock" ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description ?? undefined,
+    sku: product.sku ?? undefined,
+    brand: brand[0]?.name ? { "@type": "Brand", name: brand[0].name } : undefined,
+    offers: product.price
+      ? {
+          "@type": "Offer",
+          priceCurrency: product.currency,
+          price: product.price,
+          availability: schemaAvailability,
+        }
+      : undefined,
+  };
+
   return (
     <Container className="grid gap-16 py-20 lg:grid-cols-12 lg:py-28">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="lg:col-span-5">
         <p className="text-sm font-medium tracking-wide text-[var(--color-brand-blue)] uppercase">
           {category[0]?.name ?? "Product"} {brand[0]?.name ? `· ${brand[0].name}` : ""}

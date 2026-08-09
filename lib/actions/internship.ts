@@ -101,5 +101,5 @@ export async function submitInternshipApplication(
     }),
   ]);
 
-  redirect("/opportunities/application-received");
+  redirect("/opportunities/application-received?type=internship");
 }
