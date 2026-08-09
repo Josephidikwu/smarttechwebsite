@@ -143,6 +143,51 @@ export const jobApplicationSchema = z.object({
   additionalInfo: z.string().trim().max(2000).optional().or(z.literal("")),
 });
 
+// ----------------------------------------------------------------- Catalogue
+
+export const stockStatusOptions = ["in_stock", "out_of_stock", "contact_us"] as const;
+export const productStatusOptions = ["draft", "published"] as const;
+
+export const brandSchema = z.object({
+  name: z.string().trim().min(2, "Enter a brand name").max(200),
+});
+
+export const categorySchema = z.object({
+  name: z.string().trim().min(2, "Enter a category name").max(200),
+  description: z.string().trim().max(1000).optional().or(z.literal("")),
+});
+
+export const productSchema = z.object({
+  name: z.string().trim().min(2, "Enter a product name").max(200),
+  categoryId: z.string().optional().or(z.literal("")),
+  brandId: z.string().optional().or(z.literal("")),
+  sku: z.string().trim().max(100).optional().or(z.literal("")),
+  price: z.string().optional().or(z.literal("")),
+  currency: z.string().trim().max(10).optional().or(z.literal("")),
+  stockStatus: z.enum(stockStatusOptions, { error: "Choose a stock status" }),
+  description: z.string().trim().max(5000).optional().or(z.literal("")),
+  featured: z.string().optional(),
+  status: z.enum(productStatusOptions, { error: "Choose a status" }),
+  // Specification fields — mirrors the product detail template in the copy deck.
+  specProcessor: z.string().trim().max(200).optional().or(z.literal("")),
+  specMemory: z.string().trim().max(200).optional().or(z.literal("")),
+  specStorage: z.string().trim().max(200).optional().or(z.literal("")),
+  specDisplay: z.string().trim().max(200).optional().or(z.literal("")),
+  specConnectivity: z.string().trim().max(200).optional().or(z.literal("")),
+  specBattery: z.string().trim().max(200).optional().or(z.literal("")),
+  specOs: z.string().trim().max(200).optional().or(z.literal("")),
+  specOther: z.string().trim().max(1000).optional().or(z.literal("")),
+});
+
+export const productEnquirySchema = z.object({
+  name: z.string().trim().min(2, "Enter your full name").max(200),
+  email: z.email("Enter a valid email address").max(320),
+  phone: z.string().trim().max(40).optional().or(z.literal("")),
+  organisation: z.string().trim().max(200).optional().or(z.literal("")),
+  message: z.string().trim().max(2000).optional().or(z.literal("")),
+  type: z.enum(["request", "bulk_quote"]),
+});
+
 export const generalApplicationSchema = z.object({
   fullName: z.string().trim().min(2, "Enter your full name").max(200),
   email: z.email("Enter a valid email address").max(320),

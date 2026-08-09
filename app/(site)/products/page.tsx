@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { and, desc, eq } from "drizzle-orm";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import { getDb } from "@/lib/db/client";
+import { products, categories } from "@/lib/db/schema";
 import {
   AccessoryIcon,
   GadgetIcon,
@@ -15,7 +19,10 @@ export const metadata: Metadata = {
     "Laptops, computers, headphones, accessories, networking equipment and gadgets — technology products from Smart Technology, sourced for the way you work, learn, communicate and live.",
 };
 
-const categories = [
+// Reads live product/category data (admin-managed) — never statically cached.
+export const dynamic = "force-dynamic";
+
+const categoryTiles = [
   {
     name: "Laptops & Computers",
     copy: "Technology for work, business, education and everyday productivity.",
@@ -43,7 +50,26 @@ const categories = [
   },
 ];
 
-export default function ProductsPage() {
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}) {
+  const { category } = await searchParams;
+  const db = getDb();
+
+  const categoryRows = await db.select().from(categories);
+  const activeCategory = category ? categoryRows.find((c) => c.slug === category) : undefined;
+
+  const conditions = [eq(products.status, "published")];
+  if (activeCategory) conditions.push(eq(products.categoryId, activeCategory.id));
+
+  const productRows = await db
+    .select()
+    .from(products)
+    .where(and(...conditions))
+    .orderBy(desc(products.createdAt));
+
   return (
     <>
       <section className="pt-16 pb-4 lg:pt-24">
@@ -61,10 +87,10 @@ export default function ProductsPage() {
         </Container>
       </section>
 
-      <section className="py-20 lg:py-24">
+      <section className="py-16 lg:py-20">
         <Container>
           <div className="grid gap-px overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-border)] sm:grid-cols-2 lg:grid-cols-3">
-            {categories.map(({ name, copy, Icon }) => (
+            {categoryTiles.map(({ name, copy, Icon }) => (
               <div key={name} className="flex flex-col gap-4 bg-[var(--color-bg)] p-8">
                 <Icon className="h-8 w-8 text-[var(--color-brand-blue)]" />
                 <div>
@@ -74,6 +100,59 @@ export default function ProductsPage() {
               </div>
             ))}
           </div>
+        </Container>
+      </section>
+
+      <section className="border-t border-[var(--color-border)] py-16 lg:py-20">
+        <Container>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <h2 className="text-2xl font-bold tracking-tight text-[var(--color-ink)]">
+              {activeCategory ? activeCategory.name : "All Products"}
+            </h2>
+            {categoryRows.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                <Link
+                  href="/products"
+                  className={`rounded-full border px-3 py-1 text-xs font-medium ${!activeCategory ? "border-[var(--color-brand-blue)] text-[var(--color-brand-blue)]" : "border-[var(--color-border)] text-[var(--color-ink-muted)]"}`}
+                >
+                  All
+                </Link>
+                {categoryRows.map((c) => (
+                  <Link
+                    key={c.id}
+                    href={`/products?category=${c.slug}`}
+                    className={`rounded-full border px-3 py-1 text-xs font-medium ${activeCategory?.id === c.id ? "border-[var(--color-brand-blue)] text-[var(--color-brand-blue)]" : "border-[var(--color-border)] text-[var(--color-ink-muted)]"}`}
+                  >
+                    {c.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {productRows.length > 0 ? (
+            <div className="mt-8 grid gap-px overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-border)] sm:grid-cols-2 lg:grid-cols-3">
+              {productRows.map((p) => (
+                <Link key={p.id} href={`/products/${p.slug}`} className="group bg-[var(--color-bg)] p-6">
+                  <p className="font-semibold text-[var(--color-ink)]">{p.name}</p>
+                  {p.price ? (
+                    <p className="mt-1 text-sm text-[var(--color-ink-muted)]">
+                      {p.currency} {p.price.toLocaleString()}
+                    </p>
+                  ) : (
+                    <p className="mt-1 text-sm text-[var(--color-ink-muted)]">Contact us for pricing</p>
+                  )}
+                  <span className="mt-3 inline-block text-sm font-medium text-[var(--color-brand-blue)] opacity-0 transition-opacity group-hover:opacity-100">
+                    Explore Product →
+                  </span>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-8 text-sm text-[var(--color-ink-muted)]">
+              No products are listed here yet — check back soon.
+            </p>
+          )}
         </Container>
       </section>
 

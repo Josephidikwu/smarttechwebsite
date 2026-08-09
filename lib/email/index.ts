@@ -165,6 +165,34 @@ export async function notifyAdminOfGeneralApplication(a: {
   await sendMail({ to: adminEmail(), subject: "New general career application", html, text });
 }
 
+export async function notifyAdminOfProductEnquiry(e: {
+  name: string;
+  email: string;
+  phone?: string | null;
+  organisation?: string | null;
+  productName: string;
+  type: "request" | "bulk_quote";
+  message?: string | null;
+}) {
+  const { html, text } = layout(
+    e.type === "bulk_quote" ? "New bulk quote request" : "New product enquiry",
+    [
+      ["Product", e.productName],
+      ["Name", e.name],
+      ["Email", e.email],
+      ["Phone", e.phone],
+      ["Organisation", e.organisation],
+      ["Message", e.message],
+    ],
+  );
+  await sendMail({
+    to: adminEmail(),
+    subject: `${e.type === "bulk_quote" ? "Bulk quote request" : "Product enquiry"}: ${e.productName}`,
+    html,
+    text,
+  });
+}
+
 export async function notifyAdminOfQuoteRequest(q: {
   name: string;
   email: string;

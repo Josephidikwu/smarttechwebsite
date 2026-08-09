@@ -24,10 +24,10 @@ export const adminNav: AdminNavGroup[] = [
   {
     heading: "Products",
     items: [
-      { label: "Products", href: "/admin/products", available: false }, // M7
-      { label: "Categories", href: "/admin/categories", available: false }, // M7
-      { label: "Brands", href: "/admin/brands", available: false }, // M7
-      { label: "Product Enquiries", href: "/admin/product-enquiries", available: false }, // M7
+      { label: "Products", href: "/admin/products", available: true },
+      { label: "Categories", href: "/admin/categories", available: true },
+      { label: "Brands", href: "/admin/brands", available: true },
+      { label: "Product Enquiries", href: "/admin/product-enquiries", available: true },
     ],
   },
   {
