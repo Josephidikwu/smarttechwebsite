@@ -10,7 +10,7 @@ export function SiteFooter() {
       <Container className="py-16">
         <div className="grid grid-cols-2 gap-10 lg:grid-cols-6">
           <div className="col-span-2">
-            <Logo iconHeight={44} />
+            <Logo iconHeight={44} variant="dark" />
             <p className="mt-5 text-sm font-medium text-white">{site.tagline}</p>
             <p className="mt-2 max-w-xs text-sm text-[var(--text-muted)]">
               Technology Products &middot; Procurement &middot; Software &middot; AI &middot; Data

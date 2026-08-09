@@ -7,24 +7,24 @@ import { Logo } from "@/components/ui/logo";
 import { primaryCta, primaryNav } from "@/lib/brand";
 
 /**
- * Dark, premium nav in the lorolabs-inspired art direction: near-black
- * translucent bar, minimal link set from lib/brand.ts, one crimson primary
- * CTA, clean mobile disclosure.
+ * Clean white nav: translucent white bar, brand-blue logo lockup, minimal
+ * link set from lib/brand.ts, one brand-blue primary CTA, clean mobile
+ * disclosure.
  */
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0b0b]/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-[var(--color-border)] bg-white/90 backdrop-blur-md">
       <Container className="flex h-20 items-center justify-between py-4">
-        <Logo />
+        <Logo variant="light" />
 
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">
           {primaryNav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-medium text-[var(--text-secondary)] transition-colors hover:text-white"
+              className="text-sm font-medium text-[var(--color-ink-muted)] transition-colors hover:text-[var(--color-brand-blue)]"
             >
               {item.label}
             </Link>
@@ -46,27 +46,27 @@ export function SiteHeader() {
         >
           <span className="relative block h-4 w-5">
             <span
-              className={`absolute left-0 top-0 h-0.5 w-5 bg-white transition-transform ${open ? "translate-y-[7px] rotate-45" : ""}`}
+              className={`absolute left-0 top-0 h-0.5 w-5 bg-[var(--color-ink)] transition-transform ${open ? "translate-y-[7px] rotate-45" : ""}`}
             />
             <span
-              className={`absolute left-0 top-[7px] h-0.5 w-5 bg-white transition-opacity ${open ? "opacity-0" : ""}`}
+              className={`absolute left-0 top-[7px] h-0.5 w-5 bg-[var(--color-ink)] transition-opacity ${open ? "opacity-0" : ""}`}
             />
             <span
-              className={`absolute left-0 top-[14px] h-0.5 w-5 bg-white transition-transform ${open ? "-translate-y-[7px] -rotate-45" : ""}`}
+              className={`absolute left-0 top-[14px] h-0.5 w-5 bg-[var(--color-ink)] transition-transform ${open ? "-translate-y-[7px] -rotate-45" : ""}`}
             />
           </span>
         </button>
       </Container>
 
       {open && (
-        <div className="border-t border-white/10 bg-[#0b0b0b] lg:hidden">
+        <div className="border-t border-[var(--color-border)] bg-white lg:hidden">
           <Container className="flex flex-col gap-1 py-4">
             {primaryNav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-md px-2 py-2.5 text-sm font-medium text-[var(--text-secondary)] hover:bg-white/5 hover:text-white"
+                className="rounded-md px-2 py-2.5 text-sm font-medium text-[var(--color-ink-muted)] hover:bg-[var(--color-brand-blue-tint)] hover:text-[var(--color-brand-blue)]"
               >
                 {item.label}
               </Link>
